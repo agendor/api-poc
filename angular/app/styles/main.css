@@ -1,0 +1,115 @@
+/* Space out content a bit */
+body {
+  padding-top: 90px;
+  padding-bottom: 20px;
+}
+
+.container {
+	max-width: 1200px !important;
+}
+
+.ag-badge { color: #999; }
+.ag-badge:before { content: '('; }
+.ag-badge:after { content: ')'; }
+
+.ag-card {
+    position: relative;
+}
+
+.ag-card .ag-card-options {
+    position: absolute;
+    bottom: 0.5em;
+    right: 0.5em;
+    
+    margin: 0;
+    padding: 0;
+    
+    opacity: 0;
+    transition: 0.3s linear opacity 0.2s;
+    
+    background-color: white;
+    background-color: rgba(255, 255, 255, 0.75);
+
+    list-style: none;
+    text-align: right;
+}
+
+.ag-card:hover .ag-card-options {
+    opacity: 1;
+    transition: 0.2s linear opacity 0;
+}
+
+.ag-card .ag-card-options li {
+    display: inline-block;
+}
+
+.ag-card .ag-card-options li::after {
+    content: ' | ';
+    color: #ccc;
+}
+
+.ag-card .ag-card-options li:last-child::after {
+    content: '';
+}
+
+.ag-card .ag-card-info {
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    
+    margin: 0;
+    padding: 0;
+    
+    background-color: white;
+    background-color: rgba(255, 255, 255, 0.75);
+    
+    text-align: right;
+}
+
+.ag-stars {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ag-stars .ag-star {
+    display: inline-block;
+    font-size: larger;
+    color: #B26200;
+    cursor: pointer;
+}
+
+.ag-stars .ag-star::before { content: '\2606'; }
+
+.ag-stars .ag-star:hover::before,
+.ag-stars .ag-star:hover ~ .ag-star::before,
+.ag-stars .ag-star.ag-star-active::before {
+    content: '\2605';
+}
+
+.ag-slide {
+    max-height: 400px;
+    overflow: hidden;
+
+    transition: 800ms linear all;
+}
+
+.ag-slide.ag-slide-sm { max-height: 150px; }
+.ag-slide.ag-slide-md { max-height: 600px; }
+.ag-slide.ag-slide-lg { max-height: 1000px; }
+
+.ag-slide.ag-slide-hidden,
+.ag-slide.ag-slide-sm.ag-slide-hidden,
+.ag-slide.ag-slide-md.ag-slide-hidden,
+.ag-slide.ag-slide-lg.ag-slide-hidden {
+    max-height: 0;
+}
+
+.ag-horizontal-list {
+    margin: 0;
+    padding: 0;
+}
+
+.ag-horizontal-list li {
+    display: inline-block;
+}
