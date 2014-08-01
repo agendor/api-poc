@@ -3,7 +3,7 @@ api-poc
 
 Front-end proof of concept to use Agendor API
 
-Instalation
+Installation
 ===========
 
 Enter one of the folders (eg.: `angular/`) and run the following commands:
@@ -11,7 +11,7 @@ Enter one of the folders (eg.: `angular/`) and run the following commands:
     npm install
     bower install
 
-usage
+Usage
 =====
 
 Enter one of the folders (eg.: `angular/`) and run the following command:
