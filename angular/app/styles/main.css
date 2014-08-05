@@ -1,16 +1,24 @@
 /* Space out content a bit */
 body {
-  padding-top: 90px;
-  padding-bottom: 20px;
+    padding-top: 90px;
+    padding-bottom: 20px;
 }
 
 .container {
-	max-width: 1200px !important;
+    max-width: 1200px !important;
 }
 
-.ag-badge { color: #999; }
-.ag-badge:before { content: '('; }
-.ag-badge:after { content: ')'; }
+.ag-badge {
+    color: #999;
+}
+
+.ag-badge:before {
+    content: '(';
+}
+
+.ag-badge:after {
+    content: ')';
+}
 
 .ag-card {
     position: relative;
@@ -20,13 +28,13 @@ body {
     position: absolute;
     bottom: 0.5em;
     right: 0.5em;
-    
+
     margin: 0;
     padding: 0;
-    
+
     opacity: 0;
     transition: 0.3s linear opacity 0.2s;
-    
+
     background-color: white;
     background-color: rgba(255, 255, 255, 0.75);
 
@@ -56,13 +64,13 @@ body {
     position: absolute;
     top: 0.5em;
     right: 0.5em;
-    
+
     margin: 0;
     padding: 0;
-    
+
     background-color: white;
     background-color: rgba(255, 255, 255, 0.75);
-    
+
     text-align: right;
 }
 
@@ -79,12 +87,48 @@ body {
     cursor: pointer;
 }
 
-.ag-stars .ag-star::before { content: '\2606'; }
+.ag-stars .ag-star::before {
+    content: '\2606';
+}
 
 .ag-stars .ag-star:hover::before,
 .ag-stars .ag-star:hover ~ .ag-star::before,
 .ag-stars .ag-star.ag-star-active::before {
     content: '\2605';
+}
+
+@-webkit-keyframes agStarAnimation {
+    0%, 100% {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -o-transform: scale(1);
+        transform: scale(1);
+    }
+    50% {
+        -webkit-transform: scale(1.75);
+        -moz-transform: scale(1.75);
+        -ms-transform: scale(1.75);
+        -o-transform: scale(1.75);
+        transform: scale(1.75);
+    }
+}
+
+.ag-stars .ag-star.ag-star-selected {
+    -webkit-animation-name: agStarAnimation;
+    -moz-animation-name: agStarAnimation;
+    -o-animation-name: agStarAnimation;
+    animation-name: agStarAnimation;
+
+    -webkit-animation-iteration-count: 1;
+    -moz-animation-iteration-count: 1;
+    -o-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+
+    -webkit-animation-duration: 0.2s;
+    -moz-animation-duration: 0.2s;
+    -o-animation-duration: 0.2s;
+    animation-duration: 0.2s;
 }
 
 .ag-slide {
@@ -94,9 +138,17 @@ body {
     transition: 800ms linear all;
 }
 
-.ag-slide.ag-slide-sm { max-height: 150px; }
-.ag-slide.ag-slide-md { max-height: 600px; }
-.ag-slide.ag-slide-lg { max-height: 1000px; }
+.ag-slide.ag-slide-sm {
+    max-height: 150px;
+}
+
+.ag-slide.ag-slide-md {
+    max-height: 600px;
+}
+
+.ag-slide.ag-slide-lg {
+    max-height: 1000px;
+}
 
 .ag-slide.ag-slide-hidden,
 .ag-slide.ag-slide-sm.ag-slide-hidden,

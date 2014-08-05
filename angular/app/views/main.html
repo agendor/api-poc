@@ -5,27 +5,25 @@
 <div class="row">
     <div class="col-xs-12 col-sm-8">
         <div class="well well-sm">
-            <h2>Buscar</h2>
-            <form action="#" novalidate>
-                <div class="input-group">
-                    <input type="text" class="form-control input-lg" name="busca">
-                    <div class="input-group-btn">
-                        <button class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-search"></span>
-                        </button>
-                    </div>
+            <h2><label for="busca-top">Buscar</label></h2>
+            <div class="input-group">
+                <input type="text" class="form-control input-lg" name="busca" id="busca-top" ng-model="ctrl.searchTerm">
+                <div class="input-group-btn">
+                    <button class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-search"></span>
+                    </button>
                 </div>
-                <p class="text-muted">
-                    Buscar por:
-                    <a href="#">Categoria</a>,
-                    <a href="#">Setor</a>,
-                    <a href="#">Responsável</a>,
-                    <a href="#">Estado</a>,
-                    <a href="#">Cidade</a>,
-                    <a href="#">Bairro</a>,
-                    <a href="#">CNPJ</a> e
-                    <a href="#">Produtos/Serviços</a>
-                </p>
-            </form>
+            </div>
+            <p class="text-muted">
+                Buscar por:
+                <a href="#">Categoria</a>,
+                <a href="#">Setor</a>,
+                <a href="#">Responsável</a>,
+                <a href="#">Estado</a>,
+                <a href="#">Cidade</a>,
+                <a href="#">Bairro</a>,
+                <a href="#">CNPJ</a> e
+                <a href="#">Produtos/Serviços</a>
+            </p>
         </div>
 
         <div class="panel panel-primary">
@@ -33,81 +31,59 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-8">
                         <div class="form-group row">
-                            <form action="#" class="form-horizontal" novalidate>
+                            <div action="#" class="form-horizontal">
                                 <label for="filtro-empresa" class="col-xs-3 control-label">Ordenar<span class="hidden-xs hidden-sm hidden-md"> por</span>:</label>
                                 <div class="col-xs-9">
-                                    <select name="" id="filtro-empresa" class="form-control">
+                                    <select id="filtro-empresa" class="form-control" ng-model="ctrl.orderIndex">
                                         <option value="0">Ranking (maior > menor)</option>
                                         <option value="1">Ranking (menor > maior)</option>
                                         <option value="2">Ordem alfabética</option>
                                         <option value="3">Data de cadastro (recente > antigo)</option>
                                         <option value="4">Data de cadastro (antigo > recente)</option>
+                                        <!--
                                         <option value="5">N&ordm; de negócios (maior > menor)</option>
                                         <option value="6">N&ordm; de negócios (menor > maior)</option>
                                         <option value="7" selected>Atualizado recentemente</option>
+                                        -->
                                     </select>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-xs-12 col-sm-4">
                         <p>
-                            <a class="btn btn-default btn-block" href="#/edit">
+                            <a class="btn btn-default btn-block" href="./#/edit">
                                 <span class="glyphicon glyphicon-plus"></span> Adicionar <span class="hidden-sm">Empresa</span>
                             </a>
                         </p>
                     </div>
 
                     <div class="col-xs-12 text-right">
+                        <span ng-show="ctrl.isFiltered">
+                            exibindo <strong>{{ctrl.qtyFiltered}}</strong> de
+                        </span>
                         <span>
-                            <strong>99</strong>
-                            empresas cadastradas
+                            <strong>{{ctrl.qtyTotal}}</strong> empresas cadastradas
                         </span>
                     </div>
                 </div>
             </div>
 
             <ul class="list-group">
-                <li class="list-group-item ag-card" data-ng-repeat="item in ctrl.companies track by item.id">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <img class="img-responsive img-thumbnail" src="{{item.avatar}}">
-                        </div>
-                        <div class="col-xs-9">
-                            <h3>{{item.nome}}</h3>
-                            <p><strong>Categoria:</strong> {{item.categoria}}</p>
-                            <p><strong>Telefone:</strong> {{item.telefone}}</p>
-                        </div>
-                    </div>
-                    <div class="ag-card-info">
-                        <p class="text-muted">5 negócios cadastrados</p>
-                        <ul class="ag-stars">
-                            <li class="ag-star"></li><!--
-                         --><li class="ag-star"></li><!--
-                         --><li class="ag-star"></li><!--
-                         --><li class="ag-star ag-star-active"></li><!--
-                         --><li class="ag-star ag-star-active"></li>
-                        </ul>
-                    </div>
-                    <ul class="ag-card-options">
-                        <li><a href="#">Ver histórico</a>
-                        </li>
-                        <li><a href="#">Ver negócios <span class="ag-badge">5</span></a>
-                        </li>
-                        <li><a href="#">Ver pessoas <span class="ag-badge">3</span></a>
-                        </li>
-                        <li><a href="#/edit/{{item.id}}">Editar</a>
-                        </li>
-                    </ul>
+                <li class="list-group-item" data-ng-repeat="organization in ctrl.filtered track by organization.organizationId">
+                    <ag-organization-card organization="organization"></ag-organization-card>
                 </li>
-            </ul>
+            </u
         </div>
     </div>
 
     <div class="col-xs-12 col-sm-4">
+        <hr class="hidden-md hidden-lg">
+        <p>
             <button class="btn btn-success btn-block"><span class="glyphicon glyphicon-upload"></span> Importar empresa</button>
             <button class="btn btn-primary btn-block"><span class="glyphicon glyphicon-download"></span> Exportar empresa</button>
+        </p>
     </div>
 
 </div>
