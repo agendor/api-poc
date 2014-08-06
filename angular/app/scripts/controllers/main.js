@@ -8,11 +8,9 @@
  * Controller of the angularApp
  */
 angular.module( 'angularApp' ).controller( 'MainCtrl',
-function ( $scope, $interval, $filter, categories, organizations )
+function ( $scope, $interval, $filter, organizations )
 {
     var ctrl = this;
-
-    ctrl.categories = categories;
 
     ctrl.orderIndex = 2;
     ctrl.orderPredicate = 'nickname';

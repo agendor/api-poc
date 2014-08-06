@@ -8,11 +8,13 @@
  * # EditCtrl
  * Controller of the angularApp
  */
-angular.module( 'angularApp' ).controller( 'EditCtrl', function ( $scope, $location, OrganizationService, organization )
+angular.module( 'angularApp' ).controller( 'EditCtrl',
+function ( $scope, $location, OrganizationService, categories, organization )
 {
     var ctrl = this;
 
     ctrl.organization = organization;
+    ctrl.categories = categories;
 
     ctrl.showAddress = false;
     ctrl.showContactInfo = false;
@@ -21,9 +23,10 @@ angular.module( 'angularApp' ).controller( 'EditCtrl', function ( $scope, $locat
     ctrl.showOtherInfo = false;
     ctrl.showPeople = false;
 
-    ctrl.newOrganization = ctrl.organization.organizationId === 0 ? true : false;
+    ctrl.newOrganization = ctrl.organization.organizationId === 0;
 
-    var _saveOrganization = function () {
+    var _saveOrganization = function ()
+    {
         OrganizationService.save( ctrl.organization ).then(function ()
         {
             toastr.success( 'Empresa salva com sucesso' );
@@ -34,7 +37,16 @@ angular.module( 'angularApp' ).controller( 'EditCtrl', function ( $scope, $locat
         } );
     };
 
-    ctrl.saveAction = function () {
+    ctrl.getCategory = function (categoryId) {
+        var category = categories.filter(function ( category ) {
+            return category.categoryId === +categoryId;
+        })[0];
+
+        return category && category.name;
+    };
+
+    ctrl.saveAction = function ()
+    {
         _saveOrganization();
     };
 

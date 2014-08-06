@@ -19,10 +19,6 @@ angular.module( 'angularApp', [
         controller   : 'MainCtrl',
         controllerAs : 'ctrl',
         resolve      : {
-            'categories'    : function ( CategoryService )
-            {
-                return CategoryService.get();
-            },
             'organizations' : function ( OrganizationService )
             {
                 return OrganizationService.get();
@@ -35,6 +31,10 @@ angular.module( 'angularApp', [
         controller   : 'EditCtrl',
         controllerAs : 'ctrl',
         resolve      : {
+            'categories'    : function ( CategoryService )
+            {
+                return CategoryService.get();
+            },
             'organization' : function ( $route, OrganizationService )
             {
                 if ( $route.current.params.id === 'nova' )

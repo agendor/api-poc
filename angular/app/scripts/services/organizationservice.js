@@ -32,6 +32,72 @@ function OrganizationService ( $q, $http, DSCacheFactory )
     };
 
     /**
+     * checks if an object has no properties
+     * @param {object} obj
+     * @returns {boolean}
+     * @private
+     */
+    var _isEmptyObject = function _stripEmptyAttributes ( obj )
+    {
+        for ( var attribute in obj )
+        {
+            if ( obj.hasOwnProperty( attribute ) )
+            {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    /**
+     * removes empty attributes
+     * @param {object} obj
+     * @param {number} [level]
+     * @returns {object}
+     * @private
+     */
+    var _stripEmptyAttributes = function _stripEmptyAttributes ( obj, level )
+    {
+        level = level || 0;
+
+        if ( level > 3 )
+        {
+            return obj;
+        }
+
+        for ( var attribute in obj )
+        {
+            if ( obj.hasOwnProperty( attribute ) )
+            {
+                if ( angular.isObject( obj[attribute] ) )
+                {
+                    obj[attribute] = _stripEmptyAttributes( obj[attribute], level + 1 );
+
+                    if ( _isEmptyObject( obj[attribute] ) )
+                    {
+                        delete obj[attribute];
+                    }
+
+                    continue;
+                }
+
+                if ( angular.isArray( obj[attribute] ) && !obj[attribute].length )
+                {
+                    delete obj[attribute];
+                    continue;
+                }
+
+                if ( !obj[attribute] )
+                {
+                    delete obj[attribute];
+                }
+            }
+        }
+
+        return obj;
+    };
+
+    /**
      * returns a stub object for an organization
      * @returns {object}
      * @private
@@ -42,7 +108,7 @@ function OrganizationService ( $q, $http, DSCacheFactory )
             'organizationId' : 0,
             'customer'       : {
                 'customerId' : 0,
-                'name'       : '0'
+                'name'       : ''
             },
             'user'           : {
                 'userId' : 0
@@ -61,7 +127,7 @@ function OrganizationService ( $q, $http, DSCacheFactory )
             },
             'address'        : {
                 'postalCode'     : null,
-                'country'        : 'Brasil',
+                'country'        : '',
                 'state'          : null,
                 'city'           : null,
                 'district'       : null,
@@ -80,7 +146,7 @@ function OrganizationService ( $q, $http, DSCacheFactory )
             'website'        : null,
             'createTime'     : '',
             'ranking'        : 0,
-            'categoryId'     : 31 // TODO: get from API
+            'category'       : 0
         };
     };
 
@@ -107,7 +173,7 @@ function OrganizationService ( $q, $http, DSCacheFactory )
                     nickname       : organization.nickname,
                     ranking        : organization.ranking,
                     createTime     : organization.createTime,
-                    category       : 'Cliente efetivo', // TODO: get from API
+                    category       : 31, // TODO: get from API
                     phoneNumber    : organization.phones.length && organization.phones[0].number,
                     avatar         : 'http://lorempixel.com/150/150/nature/9'
                 };
@@ -137,11 +203,11 @@ function OrganizationService ( $q, $http, DSCacheFactory )
         {
             var organization = response.data;
 
-            organization.categoryId = 31; // TODO: get from API
+            organization.category = 31; // TODO: get from API
             organization.phoneNumber = organization.phones.length && organization.phones[0].number;
             organization.avatar = 'http://lorempixel.com/150/150/nature/9';
 
-            return deferred.resolve( organization );
+            return deferred.resolve( angular.copy( organization ) );
         } ).catch( deferred.reject );
 
         return deferred.promise;
@@ -200,15 +266,25 @@ function OrganizationService ( $q, $http, DSCacheFactory )
 
     /**
      * inserts a new organization
-     * @param {object} data
+     * @param {object} organization
      * @returns {promise|Promise.promise|Q.promise}
      * @private
      */
-    var _post = function ( data )
+    var _post = function ( organization )
     {
         var deferred = $q.defer();
 
-        $http.post( _toURL(), data, {
+        // custom code for PoC
+        organization = _stripEmptyAttributes( angular.copy( organization ) );
+        if ( organization.phoneNumber )
+        {
+            organization.phones = [
+                {type : 'mobile', number : organization.phoneNumber}
+            ];
+        }
+        delete organization.phoneNumber;
+
+        $http.post( _toURL(), organization, {
             headers : { 'Authorization' : AUTH_TOKEN}
         } ).then(function ( response )
         {
@@ -226,15 +302,42 @@ function OrganizationService ( $q, $http, DSCacheFactory )
     /**
      * updates a organization
      * @param {number} id
-     * @param {object} data
+     * @param {object} organization
      * @returns {promise|Promise.promise|Q.promise}
      * @private
      */
-    var _put = function ( id, data )
+    var _put = function ( id, organization )
     {
         var deferred = $q.defer();
 
-        $http.put( _toURL( id ), data, {
+        // custom code for PoC
+        organization = _stripEmptyAttributes( angular.copy( organization ) );
+
+        delete organization.avatar;
+        delete organization.createTime;
+        delete organization.user;
+        delete organization.customer;
+
+        if ( organization.phoneNumber )
+        {
+            if ( organization.phones && organization.phones.length )
+            {
+                organization.phones[0].number = organization.phoneNumber;
+            }
+            else
+            {
+                organization.phones = [
+                    {type : 'mobile', number : organization.phoneNumber}
+                ];
+            }
+        }
+        delete organization.phoneNumber;
+
+        if ( organization.userOwner ) {
+            organization.userOwner = organization.userOwner.userId || 0;
+        }
+
+        $http.put( _toURL( id ), organization, {
             headers : { 'Authorization' : AUTH_TOKEN}
         } ).then(function ( response )
         {
@@ -262,7 +365,8 @@ function OrganizationService ( $q, $http, DSCacheFactory )
         'delete'      : _delete,
         save          : function ( organization )
         {
-            return +organization.organizationId ? _put( +organization.organizationId, organization ) : _post( organization );
+            return +organization.organizationId ? _put( +organization.organizationId, organization ) :
+            _post( organization );
         }
     };
 } );

@@ -16,11 +16,19 @@ angular.module( 'angularApp' ).directive( 'agOrganizationCard', function ()
         },
         replace      : true,
         controllerAs : 'ctrl',
-        controller   : function ( $scope, OrganizationService )
+        controller   : function ( $scope, OrganizationService, CategoryService )
         {
             var ctrl = this;
 
             ctrl.organization = $scope.organization;
+            var categoryId = ctrl.organization.category;
+
+            ctrl.organization.category = undefined;
+
+            CategoryService.get( categoryId ).then(function ( response )
+            {
+                ctrl.organization.category = response.name;
+            } );
 
             $scope.$watch( 'ctrl.organization.ranking', function ( newValue, oldValue )
             {

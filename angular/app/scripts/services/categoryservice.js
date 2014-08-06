@@ -10,11 +10,11 @@
 angular.module( 'angularApp' ).service( 'CategoryService', function CategoriaService ( $q )
 {
     var data = [
-        {'id' : 31, 'category' : 'Cliente efetivo'},
-        {'id' : 32, 'category' : 'Cliente em potencial'},
-        {'id' : 33, 'category' : 'Concorrente'},
-        {'id' : 34, 'category' : 'Fornecedor'},
-        {'id' : 35, 'category' : 'Cliente Efetivo'}
+        {'categoryId' : 31, 'name' : 'Cliente efetivo'},
+        {'categoryId' : 32, 'name' : 'Cliente em potencial'},
+        {'categoryId' : 33, 'name' : 'Concorrente'},
+        {'categoryId' : 34, 'name' : 'Fornecedor'},
+        {'categoryId' : 35, 'name' : 'Cliente Efetivo'}
     ];
 
     return {
@@ -24,10 +24,9 @@ angular.module( 'angularApp' ).service( 'CategoryService', function CategoriaSer
 
             if ( id )
             {
-
                 var category = data.filter( function ( item )
                 {
-                    return item.id === +id;
+                    return item.categoryId === +id;
                 } )[0];
 
                 if ( category )
