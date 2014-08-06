@@ -41,9 +41,8 @@ function ( $scope, $interval, $filter, organizations )
 
     $scope.$watch( 'ctrl.orderIndex', function ( newValue )
     {
-
         switch ( +newValue )
-        {
+         {
             case 0:
                 ctrl.orderPredicate = 'ranking';
                 ctrl.orderReverse = true;

@@ -5,8 +5,7 @@ describe('Controller: EditCtrl', function () {
   // load the controller's module
   beforeEach(module('angularApp'));
 
-  var EditCtrl,
-    scope;
+  var EditCtrl, scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {

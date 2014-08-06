@@ -31,9 +31,9 @@ function ( $scope, $location, OrganizationService, categories, organization )
         {
             toastr.success( 'Empresa salva com sucesso' );
             $location.path( '/' );
-        } ).catch( function ()
+        } ).catch( function (response)
         {
-            toastr.error( 'Houve um erro ao salvar a empresa' );
+            toastr.error( response.data.message, 'Houve um erro ao salvar a empresa' );
         } );
     };
 
@@ -58,9 +58,9 @@ function ( $scope, $location, OrganizationService, categories, organization )
             {
                 toastr.success( 'Empresa excluída com sucesso' );
                 $location.path( '/' );
-            } ).catch( function ()
+            } ).catch( function (response)
             {
-                toastr.error( 'Houve um erro ao excluir a empresa' );
+                toastr.error( response.data.message, 'Houve um erro ao excluir a empresa' );
             } );
         }
     };
