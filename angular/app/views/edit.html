@@ -11,7 +11,7 @@
                 <ag-rating value="ctrl.organization.ranking"></ag-rating>
             </div>
 
-            <form action="#" novalidate ng-submit="ctrl.submitForm()">
+            <form action="#" novalidate ng-submit="ctrl.saveAction()" name="organizationData">
 
                 <p><strong>Categoria:</strong> {{ctrl.organization.category || 'Não informada'}}</p>
                 <p><strong>Telefone:</strong> {{ctrl.organization.phoneNumber || 'Não informado'}}</p>
@@ -22,7 +22,7 @@
                     <div class="form-group">
                         <label for="nome" class="col-sm-3 control-label">Nome</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="nome" name="nome">
+                            <input type="text" class="form-control" id="nome" name="nome" ng-model="ctrl.organization.nickname">
                         </div>
                     </div>
                     <div class="form-group">
@@ -296,7 +296,7 @@
         <div class="col-xs-12 col-sm-4" ng-hide="ctrl.newOrganization">
             <hr class="hidden-md hidden-lg">
             <p>
-                <button class="btn btn-danger btn-block" data-ng-click="ctrl.deleteOrganization()"><span class="glyphicon glyphicon-remove"></span> Excluir empresa</button>
+                <button class="btn btn-danger btn-block" data-ng-click="ctrl.deleteAction()"><span class="glyphicon glyphicon-remove"></span> Excluir empresa</button>
             </p>
         </div>
     </div>

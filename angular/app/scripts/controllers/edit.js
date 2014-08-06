@@ -23,7 +23,22 @@ angular.module( 'angularApp' ).controller( 'EditCtrl', function ( $scope, $locat
 
     ctrl.newOrganization = ctrl.organization.organizationId === 0 ? true : false;
 
-    ctrl.deleteOrganization = function ()
+    var _saveOrganization = function () {
+        OrganizationService.save( ctrl.organization ).then(function ()
+        {
+            toastr.success( 'Empresa salva com sucesso' );
+            $location.path( '/' );
+        } ).catch( function ()
+        {
+            toastr.error( 'Houve um erro ao salvar a empresa' );
+        } );
+    };
+
+    ctrl.saveAction = function () {
+        _saveOrganization();
+    };
+
+    ctrl.deleteAction = function ()
     {
         if ( confirm( 'Deseja realmente excluir esta empresa?\nTodo o histórico de relacionamento será perdido.' ) )
         {

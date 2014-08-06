@@ -31,7 +31,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-8">
                         <div class="form-group row">
-                            <div action="#" class="form-horizontal">
+                            <div class="form-horizontal">
                                 <label for="filtro-empresa" class="col-xs-3 control-label">Ordenar<span class="hidden-xs hidden-sm hidden-md"> por</span>:</label>
                                 <div class="col-xs-9">
                                     <select id="filtro-empresa" class="form-control" ng-model="ctrl.orderIndex">
@@ -74,7 +74,7 @@
                 <li class="list-group-item" data-ng-repeat="organization in ctrl.filtered track by organization.organizationId">
                     <ag-organization-card organization="organization"></ag-organization-card>
                 </li>
-            </u
+            </ul>
         </div>
     </div>
 

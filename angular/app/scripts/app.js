@@ -37,7 +37,12 @@ angular.module( 'angularApp', [
         resolve      : {
             'organization' : function ( $route, OrganizationService )
             {
-                return OrganizationService.get( $route.current.params.id );
+                if ( $route.current.params.id === 'nova' )
+                {
+                    return OrganizationService.stub();
+                }
+
+                return OrganizationService.get( +$route.current.params.id );
             }
         }
     } ).otherwise( {

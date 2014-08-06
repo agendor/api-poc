@@ -8,15 +8,10 @@
  * Service in the angularApp.
  */
 angular.module( 'angularApp' ).service( 'OrganizationService',
-function OrganizationService ( $q, $http, DSCacheFactory, CategoryService )
+function OrganizationService ( $q, $http, DSCacheFactory )
 {
     var BASE_URL = 'http://localhost:8000/organizations';
-
-    var toURL = function ( id )
-    {
-        return BASE_URL + ( id ? '/' + id : '' );
-
-    };
+    var AUTH_TOKEN = 'Basic dEB0LmNvbToxMjM=';
 
     var dataCache = DSCacheFactory( 'organizationCache', {
         maxAge             : 90000,         // Items added to this cache expire after 15 minutes.
@@ -24,7 +19,24 @@ function OrganizationService ( $q, $http, DSCacheFactory, CategoryService )
         deleteOnExpire     : 'aggressive'   // Items will be deleted from this cache right when they expire.
     } );
 
-    var empty = function ()
+    /**
+     * creates endpoint URL
+     * @param {number} [id] optional
+     * @returns {string}
+     * @private
+     */
+    var _toURL = function ( id )
+    {
+        return BASE_URL + ( id ? '/' + id : '' );
+
+    };
+
+    /**
+     * returns a stub object for an organization
+     * @returns {object}
+     * @private
+     */
+    var _stub = function ()
     {
         return {
             'organizationId' : 0,
@@ -72,18 +84,23 @@ function OrganizationService ( $q, $http, DSCacheFactory, CategoryService )
         };
     };
 
-    var getAll = function ()
+    /**
+     * list all organizations
+     * @returns {promise|Promise.promise|Q.promise}
+     * @private
+     */
+    var _getAll = function ()
     {
         var deferred = $q.defer();
 
-        $http.get( toURL(), {
+        $http.get( _toURL(), {
             cache   : dataCache,
-            headers : { 'Authorization' : 'Basic dEB0LmNvbToxMjM='}
+            headers : { 'Authorization' : AUTH_TOKEN}
         } ).then(function ( response )
         {
             var organizations = response.data.map( function ( organization )
             {
-                dataCache.put( toURL( organization.organizationId ), organization );
+                dataCache.put( _toURL( organization.organizationId ), organization );
 
                 return {
                     organizationId : organization.organizationId,
@@ -103,49 +120,26 @@ function OrganizationService ( $q, $http, DSCacheFactory, CategoryService )
         return deferred.promise;
     };
 
-    var getById = function ( id )
+    /**
+     * returns a organization
+     * @param {number} id
+     * @returns {promise|Promise.promise|Q.promise}
+     * @private
+     */
+    var _getById = function ( id )
     {
         var deferred = $q.defer();
 
-        if ( id === 'nova' )
-        {
-            deferred.resolve( empty() );
-        }
-        else
-        {
-
-            $http.get( toURL( id ), {
-                cache   : dataCache,
-                headers : { 'Authorization' : 'Basic dEB0LmNvbToxMjM='}
-            } ).then(function ( response )
-            {
-                var organization = response.data;
-
-                organization.categoryId = 31; // TODO: get from API
-                organization.phoneNumber = organization.phones.length && organization.phones[0].number;
-                organization.avatar = 'http://lorempixel.com/150/150/nature/9';
-
-                return deferred.resolve( organization );
-            } ).catch( deferred.reject );
-        }
-
-        return deferred.promise;
-    };
-
-    var updateRanking = function ( id, rating )
-    {
-        var deferred = $q.defer();
-
-        $http.put( toURL( id ), {
-            ranking : rating
-        }, {
-            headers : { 'Authorization' : 'Basic dEB0LmNvbToxMjM='}
+        $http.get( _toURL( id ), {
+            cache   : dataCache,
+            headers : { 'Authorization' : AUTH_TOKEN}
         } ).then(function ( response )
         {
             var organization = response.data;
 
-            dataCache.put( toURL( id ), organization );
-            dataCache.remove( toURL() );
+            organization.categoryId = 31; // TODO: get from API
+            organization.phoneNumber = organization.phones.length && organization.phones[0].number;
+            organization.avatar = 'http://lorempixel.com/150/150/nature/9';
 
             return deferred.resolve( organization );
         } ).catch( deferred.reject );
@@ -153,30 +147,122 @@ function OrganizationService ( $q, $http, DSCacheFactory, CategoryService )
         return deferred.promise;
     };
 
-    var deleteOrganization = function ( id )
+    /**
+     * Updates the ranking for an existing  organization
+     * @param {number} id
+     * @param {number} raking
+     * @returns {promise|Promise.promise|Q.promise}
+     * @private
+     */
+    var _putRanking = function ( id, raking )
     {
         var deferred = $q.defer();
 
-        $http.delete( toURL( id ), {
-            headers : { 'Authorization' : 'Basic dEB0LmNvbToxMjM='}
+        $http.put( _toURL( id ), {
+            ranking : raking
+        }, {
+            headers : { 'Authorization' : AUTH_TOKEN}
+        } ).then(function ( response )
+        {
+            var organization = response.data;
+
+            dataCache.put( _toURL( id ), organization );
+            dataCache.remove( _toURL() );
+
+            return deferred.resolve( organization );
+        } ).catch( deferred.reject );
+
+        return deferred.promise;
+    };
+
+    /**
+     * deletes a organization
+     * @param {number} id
+     * @returns {promise|Promise.promise|Q.promise}
+     * @private
+     */
+    var _delete = function ( id )
+    {
+        var deferred = $q.defer();
+
+        $http.delete( _toURL( id ), {
+            headers : { 'Authorization' : AUTH_TOKEN}
         } ).then(function ()
         {
-            dataCache.remove( toURL( id ) );
-            dataCache.remove( toURL() );
+            dataCache.remove( _toURL( id ) );
+            dataCache.remove( _toURL() );
 
             return deferred.resolve();
         } ).catch( deferred.reject );
 
         return deferred.promise;
-
     };
 
+    /**
+     * inserts a new organization
+     * @param {object} data
+     * @returns {promise|Promise.promise|Q.promise}
+     * @private
+     */
+    var _post = function ( data )
+    {
+        var deferred = $q.defer();
+
+        $http.post( _toURL(), data, {
+            headers : { 'Authorization' : AUTH_TOKEN}
+        } ).then(function ( response )
+        {
+            var organization = response.data;
+
+            dataCache.put( _toURL( organization.organizationId ), organization );
+            dataCache.remove( _toURL() );
+
+            return deferred.resolve( organization );
+        } ).catch( deferred.reject );
+
+        return deferred.promise;
+    };
+
+    /**
+     * updates a organization
+     * @param {number} id
+     * @param {object} data
+     * @returns {promise|Promise.promise|Q.promise}
+     * @private
+     */
+    var _put = function ( id, data )
+    {
+        var deferred = $q.defer();
+
+        $http.put( _toURL( id ), data, {
+            headers : { 'Authorization' : AUTH_TOKEN}
+        } ).then(function ( response )
+        {
+            var organization = response.data;
+
+            dataCache.put( _toURL( organization.organizationId ), organization );
+            dataCache.remove( _toURL() );
+
+            return deferred.resolve( organization );
+        } ).catch( deferred.reject );
+
+        return deferred.promise;
+    };
+
+    /**
+     * exposed API
+     */
     return {
+        stub          : _stub,
         get           : function ( id )
         {
-            return id ? getById( id ) : getAll();
+            return id ? _getById( id ) : _getAll();
         },
-        updateRanking : updateRanking,
-        'delete'      : deleteOrganization
+        updateRanking : _putRanking,
+        'delete'      : _delete,
+        save          : function ( organization )
+        {
+            return +organization.organizationId ? _put( +organization.organizationId, organization ) : _post( organization );
+        }
     };
 } );
