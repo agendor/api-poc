@@ -174,7 +174,7 @@ function OrganizationService ( $q, $http, DSCacheFactory )
                     ranking        : organization.ranking,
                     createTime     : organization.createTime,
                     category       : 31, // TODO: get from API
-                    phoneNumber    : organization.phones.length && organization.phones[0].number,
+                    phoneNumber    : organization.phones && organization.phones.length && organization.phones[0].number,
                     avatar         : 'http://lorempixel.com/150/150/nature/9'
                 };
 
@@ -204,8 +204,10 @@ function OrganizationService ( $q, $http, DSCacheFactory )
             var organization = response.data;
 
             organization.category = 31; // TODO: get from API
-            organization.phoneNumber = organization.phones.length && organization.phones[0].number;
+            organization.phoneNumber = organization.phones && organization.phones.length && organization.phones[0].number;
             organization.avatar = 'http://lorempixel.com/150/150/nature/9';
+
+            delete organization.phones;
 
             return deferred.resolve( angular.copy( organization ) );
         } ).catch( deferred.reject );
