@@ -7,64 +7,52 @@
  * # MainCtrl
  * Controller of the angularApp
  */
-angular.module( 'angularApp' ).controller( 'MainCtrl',
-function ( $scope, $interval, $filter, organizations )
+angular.module( 'angularApp' ).controller( 'MainCtrl', function ( $scope, $interval, $filter, organizations )
 {
     var ctrl = this;
 
-    ctrl.orderIndex = 2;
-    ctrl.orderPredicate = 'nickname';
-    ctrl.orderReverse = false;
-
     ctrl.searchTerm = '';
-
-    var updateFilter = function () {
-        ctrl.filtered = $filter( 'filter' )( organizations, ctrl.searchTerm );
-        ctrl.filtered = $filter( 'orderBy' )( ctrl.filtered, ctrl.orderPredicate, ctrl.orderReverse );
-        ctrl.qtyFiltered = ctrl.filtered.length;
-    };
-
+    ctrl.orderIndex = 2;
     ctrl.filtered = [];
-
     ctrl.isFiltered = false;
-
     ctrl.qtyFiltered = 0;
-
     ctrl.qtyTotal = organizations.length;
 
-    $scope.$watch( 'ctrl.searchTerm', function ( newValue )
+    ctrl.updateFilter = function ( term )
     {
-        ctrl.isFiltered = newValue.length !== 0;
+        var _orderPredicate = 'nickname';
+        var _orderReverse = false;
 
-        updateFilter();
-    } );
-
-    $scope.$watch( 'ctrl.orderIndex', function ( newValue )
-    {
-        switch ( +newValue )
-         {
+        switch ( +ctrl.orderIndex )
+        {
             case 0:
-                ctrl.orderPredicate = 'ranking';
-                ctrl.orderReverse = true;
+                _orderPredicate = 'ranking';
+                _orderReverse = true;
                 break;
             case 1:
-                ctrl.orderPredicate = 'ranking';
-                ctrl.orderReverse = false;
+                _orderPredicate = 'ranking';
+                _orderReverse = false;
                 break;
             case 2:
-                ctrl.orderPredicate = 'nickname';
-                ctrl.orderReverse = false;
+                _orderPredicate = 'nickname';
+                _orderReverse = false;
                 break;
             case 3:
-                ctrl.orderPredicate = 'createTime';
-                ctrl.orderReverse = false;
+                _orderPredicate = 'createTime';
+                _orderReverse = false;
                 break;
             case 4:
-                ctrl.orderPredicate = 'createTime';
-                ctrl.orderReverse = true;
+                _orderPredicate = 'createTime';
+                _orderReverse = true;
                 break;
         }
 
-        updateFilter();
-    } );
+        ctrl.filtered = $filter( 'filter' )( organizations, term );
+        ctrl.filtered = $filter( 'orderBy' )( ctrl.filtered, _orderPredicate, _orderReverse );
+
+        ctrl.qtyFiltered = ctrl.filtered.length;
+        ctrl.isFiltered = !!term.length;
+    };
+
+    ctrl.updateFilter( '' );
 } );

@@ -7,7 +7,8 @@
         <div class="well well-sm">
             <h2><label for="busca-top">Buscar</label></h2>
             <div class="input-group">
-                <input type="text" class="form-control input-lg" name="busca" id="busca-top" ng-model="ctrl.searchTerm">
+                <input type="text" class="form-control input-lg" name="busca" id="busca-top"
+                    ng-model="ctrl.searchTerm" ng-change="ctrl.updateFilter(ctrl.searchTerm)">
                 <div class="input-group-btn">
                     <button class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-search"></span>
                     </button>
@@ -34,7 +35,8 @@
                             <div class="form-horizontal">
                                 <label for="filtro-empresa" class="col-xs-3 control-label">Ordenar<span class="hidden-xs hidden-sm hidden-md"> por</span>:</label>
                                 <div class="col-xs-9">
-                                    <select id="filtro-empresa" class="form-control" ng-model="ctrl.orderIndex">
+                                    <select id="filtro-empresa" class="form-control"
+                                        ng-model="ctrl.orderIndex" ng-change="ctrl.updateFilter(ctrl.searchTerm)">
                                         <option value="0">Ranking (maior > menor)</option>
                                         <option value="1">Ranking (menor > maior)</option>
                                         <option value="2">Ordem alfabética</option>
@@ -71,6 +73,9 @@
             </div>
 
             <ul class="list-group">
+                <li class="list-group-item" ng-hide="ctrl.filtered.length">
+                    Nenhuma empresa encontrada
+                </li>
                 <li class="list-group-item" data-ng-repeat="organization in ctrl.filtered track by organization.organizationId">
                     <ag-organization-card organization="organization"></ag-organization-card>
                 </li>
