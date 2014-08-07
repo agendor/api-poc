@@ -7,9 +7,8 @@ describe( 'Service: OrganizationService', function ()
 
     // constants from service
     var BASE_URL = 'http://localhost:8000/organizations';
-    var AUTH_TOKEN = 'Basic dEB0LmNvbToxMjM=';
+//    var AUTH_TOKEN = 'Basic dEB0LmNvbToxMjM=';
 
-    beforeEach( module( 'angular-data.DSCacheFactory' ) );
     beforeEach( module( 'angularApp' ) );
 
     // mocks

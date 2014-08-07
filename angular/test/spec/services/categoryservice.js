@@ -3,11 +3,7 @@
 describe( 'Service: CategoryService', function ()
 {
     // load the service's module
-    beforeEach( function ()
-    {
-        module( 'angular-data.DSCacheFactory' );
-        module( 'angularApp' );
-    } );
+    beforeEach( module( 'angularApp' ) );
 
     // instantiate service
     var CategoryService, $$rootScope;
