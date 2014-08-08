@@ -11,10 +11,9 @@ describe( 'Service: OrganizationService', function ()
 
     beforeEach( module( 'angularApp' ) );
 
-    // mocks
+    // cache mock
     beforeEach( module( function ( $provide )
     {
-        // cache MOCK
         $provide.value( 'DSCacheFactory', function ()
         {
             return {
@@ -42,9 +41,6 @@ describe( 'Service: OrganizationService', function ()
     {
         // Set up the mock http service responses
         $httpBackend = $injector.get( '$httpBackend' );
-
-        // backend definition common for all tests
-        // $httpBackend.when( 'DELETE', ' BASE_URL + '/' + 10' ).respond( {data : {}} );
     } ) );
 
     it( 'should instantiate the service', function ()

@@ -22,12 +22,15 @@ angular.module( 'angularApp' ).directive( 'agRating', function ()
                 var $this = angular.element( this );
                 var index = 5 - $this.index();
 
-                element.find('li' ).removeClass('ag-star-selected');
+                element.find( 'li' ).removeClass( 'ag-star-selected' );
 
-                if ( index === scope.value ) {
+                if ( index === scope.value )
+                {
                     index = 0;
-                } else {
-                    $this.addClass('ag-star-selected');
+                }
+                else
+                {
+                    $this.addClass( 'ag-star-selected' );
                 }
 
                 scope.$apply( function ()

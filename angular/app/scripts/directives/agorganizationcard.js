@@ -9,7 +9,7 @@
 angular.module( 'angularApp' ).directive( 'agOrganizationCard', function ()
 {
     return {
-        templateUrl  : 'scripts/directives/partials/agorganizationcard.html',
+        template  : '<div class="ag-card">\n    <div class="row">\n        <div class="col-xs-3">\n            <img class="img-responsive img-thumbnail" src="" data-ng-src="{{ctrl.organization.avatar}}">\n        </div>\n        <div class="col-xs-9">\n            <h3>{{ctrl.organization.nickname}}</h3>\n            <p><strong>Categoria:</strong> {{ctrl.category || \'Não informada\'}}</p>\n            <p><strong>Telefone:</strong> {{ctrl.organization.phoneNumber || \'Não informado\'}}</p>\n        </div>\n    </div>\n    <div class="ag-card-info">\n        <ag-rating value="ctrl.ranking" ng-click="ctrl.updateRanking(ctrl.ranking)"></ag-rating>\n    </div>\n    <ul class="ag-card-options">\n        <li><a href="./#/edit/{{ctrl.organization.organizationId}}">Editar</a></li>\n    </ul>\n</div>',
         restrict     : 'EAC',
         scope        : {
             organization : '='
@@ -21,22 +21,28 @@ angular.module( 'angularApp' ).directive( 'agOrganizationCard', function ()
             var ctrl = this;
 
             ctrl.organization = $scope.organization;
-            var categoryId = ctrl.organization.category;
 
-            ctrl.organization.category = undefined;
+            ctrl.ranking = ctrl.organization.ranking;
 
-            CategoryService.get( categoryId ).then(function ( response )
+            ctrl.category = undefined;
+
+            CategoryService.get( ctrl.organization.category ).then( function ( response )
             {
-                ctrl.organization.category = response.name;
+                ctrl.category = response.name;
             } );
 
-            $scope.$watch( 'ctrl.organization.ranking', function ( newValue, oldValue )
+            ctrl.updateRanking = function ( newRanking )
             {
-                if ( newValue !== oldValue )
+                if ( newRanking !== ctrl.organization.ranking )
                 {
-                    OrganizationService.updateRanking( ctrl.organization.organizationId, newValue );
+                    ctrl.ranking = newRanking;
+                    ctrl.organization.ranking = ctrl.ranking;
+                    OrganizationService.updateRanking( ctrl.organization.organizationId, newRanking );
+                    return true
                 }
-            } );
+
+                return false;
+            };
         }
     };
 } );

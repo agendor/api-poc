@@ -134,8 +134,6 @@ describe( 'Controller: EditCtrl', function ()
             return false;
         };
 
-        console.log( window.confirm );
-
         var _return = ctrl.deleteAction();
 
         expect( _return ).toBe( false );
