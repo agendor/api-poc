@@ -32,28 +32,39 @@ EmberApp.OrganizationController = Ember.ObjectController.extend( {
         return !!(nickname && nickname.trim());
     },
 
+    contentArrayDidChange : function ( array, start, removeAmt, addAmt )
+    {
+        return this;
+    },
+
     actions : {
         updateRanking : function ( ranking )
         {
-            var isDirty = this.get('isDirty');
+            var isDirty = this.get( 'isDirty' );
 
-            this.set('ranking', ranking);
-            this.set('isDirty', isDirty);
+            this.set( 'ranking', ranking );
+            this.set( 'isDirty', isDirty );
 
-            this.get('model').updateRanking();
+            this.get( 'model' ).updateRanking();
         },
         save          : function ()
         {
             var ctrl = this;
+            var _aCtrl = this.controllerFor('organizations');
             var isValid = this.validate();
 
             if ( isValid )
             {
-                this.get( 'model' ).save().then(function ()
+                this.get( 'model' ).save().done(function ( updated )
                 {
                     toastr.success( 'Empresa salva com sucesso' );
+
+                    ctrl.set( 'model', updated );
+                    // _aCtrl.get('model' ).reset();
+                    _aCtrl.reset();
+
                     ctrl.transitionToRoute( 'organizations' );
-                } ).catch( function ()
+                } ).fail( function ()
                 {
                     toastr.error( 'Houve um erro ao salvar a empresa' );
                 } );
@@ -69,12 +80,17 @@ EmberApp.OrganizationController = Ember.ObjectController.extend( {
             if ( confirm( 'Deseja realmente excluir esta empresa?\nTodo o histórico de relacionamento será perdido.' ) )
             {
                 var ctrl = this;
+                var _aCtrl = this.controllerFor('organizations');
 
-                this.get( 'model' ).destroyRecord().then(function ()
+                this.get( 'model' ).delete().done(function ()
                 {
                     toastr.success( 'Empresa excluída com sucesso' );
+
+                    ctrl.get( 'model' ).destroy();
+                    _aCtrl.removeObject(ctrl.get( 'model' ));
+
                     ctrl.transitionToRoute( 'organizations' );
-                } ).catch( function ()
+                } ).fail( function ()
                 {
                     toastr.error( 'Houve um erro ao excluir a empresa' );
                 } );

@@ -110,6 +110,14 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
 
         var self = this;
 
+        var _clone = JSON.parse(this.serialize(  ));
+
+        if ( _clone.category && _clone.category.categoryId ) {
+            _clone.category = +_clone.category.categoryId;
+        }
+
+        this.deserialize( _clone );
+
         if ( this.get( 'organizationId' ) === 0 )
         {
             $.ajax( {
