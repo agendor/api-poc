@@ -1,0 +1,54 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navcollapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href>Agendor</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navcollapse">
+            <ul class="nav navbar-nav">
+                <li><a href>Início</a></li>
+                <li><a href>Tarefas</a></li>
+                {{#link-to 'organizations' tagName='li'}}<a href>Empresas</a>{{/link-to}}
+                <li><a href>Pessoas</a></li>
+                <li><a href>Negócios</a></li>
+                <li><a href>Relatórios</a></li>
+                <li>
+                    <a href data-toggle="dropdown">Menu <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href>Dados cadastrais</a></li>
+                        <li><a href>Minha conta</a></li>
+                        <li><a href>Usuários</a></li>
+                        <li><a href>Grupos</a></li>
+                        <li><a href>Departamentos</a></li>
+                        <li><a href>Configurações</a></li>
+                        <li><a href>Integrações</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Usuário
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href><span class="glyphicon glyphicon-question-sign"></span> Dúvidas</a></li>
+                        <li class="divider"></li>
+                        <li><a href><span class="glyphicon glyphicon-pencil"></span> Minha conta</a></li>
+                        <li><a href><span class="glyphicon glyphicon-shopping-cart"></span> Adquirir</a></li>
+                        <li><a href><span class="glyphicon glyphicon-log-out"></span> Sair</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="col-xs-12">{{outlet}}</div>
+</div>

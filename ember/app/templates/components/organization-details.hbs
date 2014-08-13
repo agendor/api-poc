@@ -1,0 +1,19 @@
+<div class="ag-card">
+    <div class="row">
+        <div class="col-xs-3">
+            <img class="img-responsive img-thumbnail" {{bind-attr src='organization.avatar'}}>
+        </div>
+        <div class="col-xs-9">
+            <h3>{{organization.nickname}}</h3>
+            <p><strong>Categoria:</strong> {{organization.category.name}}</p>
+            <p><strong>Telefone:</strong> {{organization.phoneNumber.number}}</p>
+        </div>
+    </div>
+    <div class="ag-card-info">
+        {{ag-ranking ranking=organization.ranking action='updateRanking'}}
+    </div>
+    <ul class="ag-card-options">
+        <li>{{#link-to 'organization' organization.organizationId}}Editar{{/link-to}}</li>
+    </ul>
+</div>
+

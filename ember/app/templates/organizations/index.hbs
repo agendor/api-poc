@@ -1,0 +1,81 @@
+<div class="page-header">
+    <h1>Empresas</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8">
+        <div class="well well-sm">
+            <h2><label for="busca-top">Buscar</label></h2>
+            <div class="input-group">
+                {{input classNames='form-control input-lg' valueBinding='filter'}}
+                <div class="input-group-btn">
+                    <button class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>
+            </div>
+            <p class="text-muted">
+                Buscar por:
+                <a href="#">Categoria</a>,
+                <a href="#">Setor</a>,
+                <a href="#">Responsável</a>,
+                <a href="#">Estado</a>,
+                <a href="#">Cidade</a>,
+                <a href="#">Bairro</a>,
+                <a href="#">CNPJ</a> e
+                <a href="#">Produtos/Serviços</a>
+            </p>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="form-group row">
+                            <div class="form-horizontal">
+                                <label for="filtro-empresa" class="col-xs-3 control-label">Ordenar<span class="hidden-xs hidden-sm hidden-md"> por</span>:</label>
+                                <div class="col-xs-9">
+                                    {{view Ember.Select classNames='form-control'
+                                           content=orders optionLabelPath='content.label' value=order}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-4">
+                        <p>
+                            {{#link-to 'organization' 'nova' class='btn btn-default btn-block'}}<span class="glyphicon glyphicon-plus"></span> Adicionar <span class="hidden-sm">Empresa</span>{{/link-to}}
+                        </p>
+                    </div>
+
+                    <div class="col-xs-12 text-right">
+                        {{#if isFiltered}}
+                            <span>exibindo <strong>{{filteredCount}}</strong> de</span>
+                        {{/if}}
+                        <span>
+                            <strong>{{totalCount}}</strong> empresas cadastradas
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list-group">
+                {{#each filteredContent}}
+                    {{organization-details organization=this classNames='list-group-item'}}
+                {{else}}
+                    <div class="list-group-item">
+                        Nenhuma empresa encontrada
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-4">
+        <hr class="hidden-md hidden-lg">
+        <p>
+            <button class="btn btn-success btn-block"><span class="glyphicon glyphicon-upload"></span> Importar empresa</button>
+            <button class="btn btn-primary btn-block"><span class="glyphicon glyphicon-download"></span> Exportar empresa</button>
+        </p>
+    </div>
+
+</div>

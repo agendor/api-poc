@@ -1,0 +1,333 @@
+<div class="page-header">
+    <h1>{{name}} {{#if showNewLabel}}<small><span class="label label-info">nova</span></small>{{/if}}</h1>
+</div>
+
+<div class="container">
+<div class="row">
+
+<div class="col-xs-12 col-sm-8 ag-card">
+
+<form {{action 'save' on='submit'}}>
+<div class="ag-card-info">
+    {{ag-ranking ranking=ranking action="updateRanking"}}
+</div>
+
+<p><strong>Categoria:</strong> {{category.name}}</p>
+<p><strong>Telefone:</strong> {{phoneNumber.number}}</p>
+
+{{#if isDirty}}
+    <p class="alert alert-danger">As informações não estão salvas!</p>
+{{/if}}
+<hr>
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <label for="nome" class="col-sm-3 control-label">Nome</label>
+        <div class="col-sm-9">
+            {{input type='text' class='form-control' autofocus='true' required='true' value=nickname}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="cnpj" class="col-sm-3 control-label">CNPJ</label>
+        <div class="col-sm-9">
+            {{input type='text' class='form-control' value=cnpj}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="categoria" class="col-sm-3 control-label">Categoria</label>
+        <div class="col-sm-9">
+            {{view Ember.Select classNames='form-control'
+                content=categories
+                optionLabelPath='content.name'
+                prompt='Selecione'
+                value=category}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="responsavel" class="col-sm-3 control-label">Responsável</label>
+        <div class="col-sm-9">
+            <select class="form-control" id="responsavel" name="responsavel" disabled>
+                <option value="0">Eu</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="telefone" class="col-sm-3 control-label">Telefone</label>
+        <div class="col-sm-9">
+            {{input type='text' class='form-control' value=phoneNumber.number}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="website" class="col-sm-3 control-label">Website</label>
+        <div class="col-sm-9">
+            {{input type='text' class='form-control' value=website}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="descricao" class="col-sm-3 control-label">Descrição</label>
+        <div class="col-sm-9">
+            {{textarea class='form-control' rows='4' value=description}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="privacidade-todos" class="col-sm-3 control-label">Privacidade</label>
+        <div class="col-sm-9">
+            <p class="form-control-static"><small><strong>Quem pode ver o histórico e editar esta empresa?</strong><br></small></p>
+            <div class="checkbox checkbox-disabled"><label class="checkbox-inline"><input type="checkbox" id="privacidade-todos" name="privacidade-todos" checked disabled>Todos</label></div>
+            <div class="checkbox checkbox-disabled"><label class="checkbox-inline"><input type="checkbox" id="privacidade-eu" name="privacidade-eu" disabled>Eu</label><p class="text-muted"><small>Os usuários do grupo Administradores também terão acesso.</small></p></div>
+            <div class="checkbox checkbox-disabled"><label class="checkbox-inline"><input type="checkbox" id="privacidade-outros" disabled>Outros usuários</label></div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h3>Produtos e serviços relacionados <small><span class="label label-info pull-right">novidade!</span></small></h3>
+
+<p data-ng-show="!ctrl.showProducts"><a href="" data-ng-click="ctrl.showProducts = true">Adicionar endereço desta empresa</a></p>
+<p data-ng-show="ctrl.showProducts"><a href="" data-ng-click="ctrl.showProducts = false">Esconder campos</a></p>
+
+<div class="ag-slide ag-slide-tn" data-ng-class="{'ag-slide-hidden' : !ctrl.showProducts}">
+    <p class="text-muted">Clique nas etiquetas para marcar o produto/serviço</p>
+    <ul class="ag-horizontal-list">
+        <li><span class="label label-default">Produto 1</span></li>
+        <li><span class="label label-default">Produto 2</span></li>
+        <li><span class="label label-default">Produto 3</span></li>
+    </ul>
+</div>
+
+<hr>
+
+<h3>Endereço</h3>
+
+<p data-ng-show="!ctrl.showAddress"><a href="" data-ng-click="ctrl.showAddress = true">Adicionar endereço desta empresa</a></p>
+<p data-ng-show="ctrl.showAddress"><a href="" data-ng-click="ctrl.showAddress = false">Esconder campos</a></p>
+
+<div class="ag-slide ag-slide-md" data-ng-class="{'ag-slide-hidden' : !ctrl.showAddress}">
+    <fieldset class="form-horizontal">
+        <div class="form-group">
+            <label for="cep" class="col-sm-3 control-label">CEP</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="cep" name="cep"
+                       ng-model="ctrl.organization.address.postalCode">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="pais" class="col-sm-3 control-label">País</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="pais" name="pais" value="Brasil"
+                       ng-model="ctrl.organization.address.country">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="estado" class="col-sm-3 control-label">Estado</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="estado" name="estado"
+                        ng-model="ctrl.organization.address.state">
+                    <option value="">Selecione...</option>
+                    <option value="CE">Ceará</option>
+                    <option value="RS">Rio Grande do Sul</option>
+                    <option value="SP">São Paulo</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="cidade" class="col-sm-3 control-label">Cidade</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="cidade" name="cidade"
+                        ng-model="ctrl.organization.address.city">
+                    <option value="">Selecione...</option>
+                    <option>Fortaleza</option>
+                    <option>Caxias do Sul</option>
+                    <option>São Paulo</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="bairro" class="col-sm-3 control-label">Bairro</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="bairro" name="bairro"
+                       ng-model="ctrl.organization.address.district">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="rua" class="col-sm-3 control-label">Rua</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="rua" name="rua"
+                       ng-model="ctrl.organization.address.streetName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="numero" class="col-sm-3 control-label">Número</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="numero" name="numero"
+                       ng-model="ctrl.organization.address.streetNumber">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="complemento" class="col-sm-3 control-label">Complemento</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="complemento" name="complemento"
+                       ng-model="ctrl.organization.address.additionalInfo">
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<hr>
+
+<h3>Informações para contato</h3>
+
+<p data-ng-show="!ctrl.showContactInfo"><a href="" data-ng-click="ctrl.showContactInfo = true">Adicionar informações para contato desta empresa</a></p>
+<p data-ng-show="ctrl.showContactInfo"><a href="" data-ng-click="ctrl.showContactInfo = false">Esconder campos</a></p>
+
+<div class="ag-slide" data-ng-class="{'ag-slide-hidden' : !ctrl.showContactInfo}">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="email" class="col-sm-3 control-label">E-mail</label>
+            <div class="col-sm-9">
+                <input type="email" class="form-control" id="email" name="email" disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="celular" class="col-sm-3 control-label">Celular</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="celular" name="celular" disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="fax" class="col-sm-3 control-label">Fax</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="fax" name="fax" disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ramal" class="col-sm-3 control-label">Ramal</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="ramal" name="ramal" disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="radio" class="col-sm-3 control-label">Radio</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="radio" name="radio" disabled>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h3>Redes sociais</h3>
+
+<p data-ng-show="!ctrl.showSocialNetworks"><a href="" data-ng-click="ctrl.showSocialNetworks = true">Adicionar redes sociais desta empresa</a></p>
+<p data-ng-show="ctrl.showSocialNetworks"><a href="" data-ng-click="ctrl.showSocialNetworks = false">Esconder campos</a></p>
+
+<div class="ag-slide" data-ng-class="{'ag-slide-hidden' : !ctrl.showSocialNetworks}">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="facebook" class="col-sm-3 control-label">Facebook</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="facebook" name="facebook"
+                       ng-model="ctrl.ogranization.social.email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="twitter" class="col-sm-3 control-label">Twitter</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="twitter" name="twitter"
+                       ng-model="ctrl.ogranization.social.twitter">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="linkedin" class="col-sm-3 control-label">Linkedin</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="linkedin" name="linkedin"
+                       ng-model="ctrl.ogranization.social.linkedin">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="skype" class="col-sm-3 control-label">Skype</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="skype" name="skype"
+                       ng-model="ctrl.ogranization.social.skype">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="msn" class="col-sm-3 control-label">MSN</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="msn" name="msn"
+                       ng-model="ctrl.ogranization.social.msn">
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h3>Pessoas dessa empresa</h3>
+
+<p data-ng-show="!ctrl.showPeople"><a href="" data-ng-click="ctrl.showPeople = true">alterar pessoas desta empresa</a></p>
+<p data-ng-show="ctrl.showPeople"><a href="" data-ng-click="ctrl.showPeople = false">Esconder campos</a></p>
+
+<div class="ag-slide ag-slide-tn" data-ng-class="{'ag-slide-hidden' : !ctrl.showPeople}">
+    <p class="text-muted">to be implemented</p>
+</div>
+
+<hr>
+
+<h3>Outras informações</h3>
+
+<p data-ng-show="!ctrl.showOtherInfo"><a href="" data-ng-click="ctrl.showOtherInfo = true">Adicionar outras informações desta empresa</a></p>
+<p data-ng-show="ctrl.showOtherInfo"><a href="" data-ng-click="ctrl.showOtherInfo = false">Esconder campos</a></p>
+
+<div class="ag-slide ag-slide-sm" data-ng-class="{'ag-slide-hidden' : !ctrl.showOtherInfo}">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="setor" class="col-sm-3 control-label">Setor</label>
+            <div class="col-sm-9">
+                <select class="form-control" id="setor" name="setor" disabled>
+                    <option value="">Selecione</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="razaoSocial" class="col-sm-3 control-label">Razão Social</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="razaoSocial" name="razaoSocial"
+                       ng-model="ctrl.organization.legalName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="logotipo" class="col-sm-3 control-label">Logotipo</label>
+            <div class="col-sm-9">
+                <input type="file" class="form-control" id="logotipo" name="logotipo">
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="text-right">
+    <button class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> Gravar alterações</button>
+    ou
+    {{#link-to 'organizations'}}cancelar{{/link-to}}
+</div>
+
+</form>
+
+</div>
+
+<div class="col-xs-12 col-sm-4" ng-hide="ctrl.newOrganization">
+    <hr class="hidden-md hidden-lg">
+    {{#unless isNew}}
+    <p>
+        <button class="btn btn-danger btn-block" {{action 'deleteRecord'}}><span class="glyphicon glyphicon-remove"></span> Excluir empresa</button>
+    </p>
+    {{/unless}}
+</div>
+</div>
+
+</div>
+
