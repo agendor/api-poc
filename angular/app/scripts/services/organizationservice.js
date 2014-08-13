@@ -37,7 +37,7 @@ function OrganizationService ( $q, $http, DSCacheFactory )
      * @returns {boolean}
      * @private
      */
-    var _isEmptyObject = function _stripEmptyAttributes ( obj )
+    var _isEmptyObject = function _isEmptyObject ( obj )
     {
         for ( var attribute in obj )
         {
