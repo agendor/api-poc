@@ -24,8 +24,8 @@ EmberApp.OrganizationsIndexController = Ember.ArrayController.extend( {
     }.property( 'filteredContent' ),
 
     orders: [
-        Ember.Object.create({ label: 'Ranking (maior > menor)', property: 'ranking', ascending: false }),
-        Ember.Object.create({ label: 'Ranking (menor > maior)', property: 'ranking', ascending: true }),
+        Ember.Object.create({ label: 'Ranking (maior > menor)', property: 'ranking', ascending: true }),
+        Ember.Object.create({ label: 'Ranking (menor > maior)', property: 'ranking', ascending: false }),
         Ember.Object.create({ label: 'Ordem alfabética', property: 'nickname', ascending: true }),
         Ember.Object.create({ label: 'Data de cadastro (recente > antigo)', property: 'createTime', ascending: false }),
         Ember.Object.create({ label: 'Data de cadastro (antigo > recente)', property: 'createTime', ascending: true })
@@ -39,5 +39,13 @@ EmberApp.OrganizationsIndexController = Ember.ArrayController.extend( {
         this.set('sortProperties', [ order.property ]);
         this.set('sortAscending', order.ascending);
 
-    }.observes('order', 'filteredContent.@each.ranking')
+    }.observes('order', 'filteredContent.@each.ranking'),
+
+    init: function () {
+        this._super();
+
+        var orders = this.get('orders');
+
+        this.set('order', orders.findBy('property', 'nickname'));
+    }
 } );

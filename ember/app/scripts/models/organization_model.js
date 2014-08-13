@@ -1,27 +1,9 @@
 /*global Ember, $*/
 
-var BASE_URL = 'http://localhost:8000';
-
-/**
- * @ref http://stackoverflow.com/a/10260347
- */
-EmberApp.Serializable = Ember.Mixin.create( {
-    serialize : function ()
-    {
-        var propertyNames = this.get( 'propertyNames' ) || [];
-        return JSON.stringify( this.getProperties( propertyNames ) );
-    },
-
-    deserialize : function ( hash )
-    {
-        this.setProperties( hash );
-    }
-} );
-
 // ----------------------------------- ORGANIZATION
 EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
     propertyNames : [
-        'nickname', 'phones', 'ranking', 'cnpj', 'website'
+        'nickname', 'phones', 'ranking', 'cnpj', 'website', 'category', 'address'
     ],
 
     avatar : function ()
@@ -34,33 +16,43 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
 
     }.property( 'organizationId' ),
 
-    inCategory : function ()
-    {
-        console.log(EmberApp.Category.get( 31 ));
-        return EmberApp.Category.get( 31 );
-    }.property(),
-
     phoneNumber : function ( key, value )
     {
         var phones = this.get( 'phones' );
+        var phone, isDirty;
 
         if ( !phones || !phones.length )
         {
             phones = [
                 {
-                    type : 'mobile', number : null
+                    type : 'work', number : null
                 }
             ];
         }
 
+        phone = phones.filter( function ( item )
+        {
+            return item.type === 'work';
+        } )[0] || null;
+
+        if ( !phone )
+        {
+            phone = { type : 'work', number : null };
+            phones.push( phone );
+        }
+
+        isDirty = this.get( 'isDirty' );
+
         if ( arguments.length > 1 )
         {
-            phones[0].number = value;
+            phone.number = value;
+            isDirty = true;
         }
 
         this.set( 'phones', phones );
+        this.set( 'isDirty', isDirty );
 
-        return phones[0];
+        return phone;
     }.property( 'phones' ),
 
     isDirty : false,
@@ -98,7 +90,7 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
         else
         {
             $.ajax( {
-                url  : BASE_URL + '/organizations/' + this.get( 'organizationId' ),
+                url  : EmberApp.BASE_URL + '/organizations/' + this.get( 'organizationId' ),
                 type : 'PUT',
                 data : JSON.stringify( { ranking : this.get( 'ranking' ) } )
             } ).done(function ()
@@ -121,7 +113,7 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
         if ( this.get( 'organizationId' ) === 0 )
         {
             $.ajax( {
-                url  : BASE_URL + '/organizations',
+                url  : EmberApp.BASE_URL + '/organizations',
                 type : 'POST',
                 data : this.serialize()
             } ).done(function ( response )
@@ -140,7 +132,7 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
         else
         {
             $.ajax( {
-                url  : BASE_URL + '/organizations/' + this.get( 'organizationId' ),
+                url  : EmberApp.BASE_URL + '/organizations/' + this.get( 'organizationId' ),
                 type : 'PUT',
                 data : this.serialize()
             } ).done(function ( response )
@@ -169,7 +161,7 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
         else
         {
             $.ajax( {
-                url  : BASE_URL + '/organizations/' + this.get( 'organizationId' ),
+                url  : EmberApp.BASE_URL + '/organizations/' + this.get( 'organizationId' ),
                 type : 'DELETE'
             } ).done(function ()
             {
@@ -189,12 +181,17 @@ EmberApp.Organization.all = function ()
     var deferred = $.Deferred();
 
     $.ajax( {
-        url  : BASE_URL + '/organizations',
+        url  : EmberApp.BASE_URL + '/organizations',
         type : 'GET'
     } ).done(function ( response )
     {
         deferred.resolve( response.map( function ( item )
         {
+            if ( item.category )
+            {
+                item.category = EmberApp.Category.get( item.category.categoryId );
+            }
+
             return EmberApp.Organization.create( item );
         } ) );
     } ).fail( function ()
@@ -214,11 +211,16 @@ EmberApp.Organization.get = function ( id )
     if ( typeof id === 'number' && id > 0 )
     {
         $.ajax( {
-            url  : BASE_URL + '/organizations/' + id,
+            url  : EmberApp.BASE_URL + '/organizations/' + id,
             type : 'GET'
-        } ).done(function ( response )
+        } ).done(function ( item )
         {
-            deferred.resolve( EmberApp.Organization.create( response ) );
+            if ( item.category )
+            {
+                item.category = EmberApp.Category.get( item.category.categoryId );
+            }
+
+            deferred.resolve( EmberApp.Organization.create( item ) );
         } ).fail( function ()
         {
             deferred.reject( 'unexpected server error on GET ' + id );
@@ -226,43 +228,8 @@ EmberApp.Organization.get = function ( id )
     }
     else
     {
-        deferred.resolve( EmberApp.Organization.create( {organizationId : 0} ) );
+        deferred.resolve( EmberApp.Organization.create( {organizationId : 0, phones : []} ) );
     }
 
     return deferred.promise();
 };
-
-// ----------------------------------- CATEGORY
-
-EmberApp.Category = Ember.Object.extend();
-
-EmberApp.Category.get = function ( id )
-{
-    return EmberApp.Category.FIXTURES.filter( function ( category )
-    {
-        return category.categoryId === +id;
-    } );
-};
-
-EmberApp.Category.FIXTURES = [
-    EmberApp.Category.create( {
-        categoryId : 31,
-        name       : 'Cliente efetivo'
-    } ),
-    EmberApp.Category.create( {
-        categoryId : 32,
-        name       : 'Cliente em potencial'
-    } ),
-    EmberApp.Category.create( {
-        categoryId : 33,
-        name       : 'Concorrente'
-    } ),
-    EmberApp.Category.create( {
-        categoryId : 34,
-        name       : 'Fornecedor'
-    } ),
-    EmberApp.Category.create( {
-        categoryId : 35,
-        name       : 'Parceiro'
-    } )
-];

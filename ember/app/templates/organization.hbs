@@ -108,67 +108,57 @@
         <div class="form-group">
             <label for="cep" class="col-sm-3 control-label">CEP</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="cep" name="cep"
-                       ng-model="ctrl.organization.address.postalCode">
+                {{input type='text' class='form-control' value=address.postalCode}}
             </div>
         </div>
         <div class="form-group">
             <label for="pais" class="col-sm-3 control-label">País</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="pais" name="pais" value="Brasil"
-                       ng-model="ctrl.organization.address.country">
+                {{input type='text' class='form-control' value=address.country}}
             </div>
         </div>
         <div class="form-group">
             <label for="estado" class="col-sm-3 control-label">Estado</label>
             <div class="col-sm-9">
-                <select class="form-control" id="estado" name="estado"
-                        ng-model="ctrl.organization.address.state">
-                    <option value="">Selecione...</option>
-                    <option value="CE">Ceará</option>
-                    <option value="RS">Rio Grande do Sul</option>
-                    <option value="SP">São Paulo</option>
-                </select>
+                {{view Ember.Select classNames='form-control'
+                content=states
+                optionValuePath='content.acronym'
+                optionLabelPath='content.name'
+                prompt='Selecione'
+                value=address.state}}
             </div>
         </div>
         <div class="form-group">
             <label for="cidade" class="col-sm-3 control-label">Cidade</label>
             <div class="col-sm-9">
-                <select class="form-control" id="cidade" name="cidade"
-                        ng-model="ctrl.organization.address.city">
-                    <option value="">Selecione...</option>
-                    <option>Fortaleza</option>
-                    <option>Caxias do Sul</option>
-                    <option>São Paulo</option>
-                </select>
+                {{view Ember.Select classNames='form-control'
+                content=cities
+                prompt='Selecione'
+                value=address.city}}
             </div>
         </div>
         <div class="form-group">
             <label for="bairro" class="col-sm-3 control-label">Bairro</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="bairro" name="bairro"
-                       ng-model="ctrl.organization.address.district">
+                {{input type='text' class='form-control' value=address.district}}
             </div>
         </div>
         <div class="form-group">
             <label for="rua" class="col-sm-3 control-label">Rua</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="rua" name="rua"
-                       ng-model="ctrl.organization.address.streetName">
+                {{input type='text' class='form-control' value=address.streetname}}
             </div>
         </div>
         <div class="form-group">
             <label for="numero" class="col-sm-3 control-label">Número</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="numero" name="numero"
-                       ng-model="ctrl.organization.address.streetNumber">
+                {{input type='text' class='form-control' value=address.streetNumber}}
             </div>
         </div>
         <div class="form-group">
             <label for="complemento" class="col-sm-3 control-label">Complemento</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="complemento" name="complemento"
-                       ng-model="ctrl.organization.address.additionalInfo">
+                {{input type='text' class='form-control' value=address.additionalInfo}}
             </div>
         </div>
     </fieldset>
@@ -228,36 +218,31 @@
         <div class="form-group">
             <label for="facebook" class="col-sm-3 control-label">Facebook</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="facebook" name="facebook"
-                       ng-model="ctrl.ogranization.social.email">
+                {{input type='text' class='form-control' value=social.email}}
             </div>
         </div>
         <div class="form-group">
             <label for="twitter" class="col-sm-3 control-label">Twitter</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="twitter" name="twitter"
-                       ng-model="ctrl.ogranization.social.twitter">
+                {{input type='text' class='form-control' value=social.twitter}}
             </div>
         </div>
         <div class="form-group">
             <label for="linkedin" class="col-sm-3 control-label">Linkedin</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="linkedin" name="linkedin"
-                       ng-model="ctrl.ogranization.social.linkedin">
+                {{input type='text' class='form-control' value=social.linkedin}}
             </div>
         </div>
         <div class="form-group">
             <label for="skype" class="col-sm-3 control-label">Skype</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="skype" name="skype"
-                       ng-model="ctrl.ogranization.social.skype">
+                {{input type='text' class='form-control' value=social.skype}}
             </div>
         </div>
         <div class="form-group">
             <label for="msn" class="col-sm-3 control-label">MSN</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="msn" name="msn"
-                       ng-model="ctrl.ogranization.social.msn">
+                {{input type='text' class='form-control' value=social.msn}}
             </div>
         </div>
     </div>
@@ -294,8 +279,7 @@
         <div class="form-group">
             <label for="razaoSocial" class="col-sm-3 control-label">Razão Social</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="razaoSocial" name="razaoSocial"
-                       ng-model="ctrl.organization.legalName">
+                {{input type='text' class='form-control' value=legalName}}
             </div>
         </div>
         <div class="form-group">
@@ -319,7 +303,7 @@
 
 </div>
 
-<div class="col-xs-12 col-sm-4" ng-hide="ctrl.newOrganization">
+<div class="col-xs-12 col-sm-4">
     <hr class="hidden-md hidden-lg">
     {{#unless isNew}}
     <p>
