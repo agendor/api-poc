@@ -14,7 +14,7 @@ angular.module( 'angularApp' ).service( 'CategoryService', function CategoriaSer
         {'categoryId' : 32, 'name' : 'Cliente em potencial'},
         {'categoryId' : 33, 'name' : 'Concorrente'},
         {'categoryId' : 34, 'name' : 'Fornecedor'},
-        {'categoryId' : 35, 'name' : 'Cliente Efetivo'}
+        {'categoryId' : 35, 'name' : 'Parceiro'}
     ];
 
     return {
