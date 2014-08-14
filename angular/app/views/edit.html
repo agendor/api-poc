@@ -8,8 +8,8 @@
         <div class="col-xs-12 col-sm-8 ag-card">
 
             <form novalidate ng-submit="ctrl.saveAction()" name="organizationForm">
-                <div class="ag-card-info">
-                    <ag-rating value="ctrl.organization.ranking"></ag-rating>
+                <div class="ag-card-info" ng-hide="ctrl.newOrganization">
+                    <ag-ranking ranking="ctrl.organization.ranking"></ag-ranking>
                 </div>
 
                 <p><strong>Categoria:</strong> {{ctrl.getCategory(ctrl.organization.category) || 'Não informada'}}</p>
