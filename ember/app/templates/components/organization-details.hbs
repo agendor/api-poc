@@ -5,7 +5,7 @@
         </div>
         <div class="col-xs-9">
             <h3>{{unbound organization.nickname}}</h3>
-            <p><strong>Categoria:</strong> {{unbound organization.category.name}}</p>
+            <p><strong>Categoria:</strong> {{unbound organization.categoryName}}</p>
             <p><strong>Telefone:</strong> {{unbound organization.phoneNumber.number}}</p>
         </div>
     </div>
@@ -16,4 +16,3 @@
         <li>{{#link-to 'organization' organization.organizationId}}Editar{{/link-to}}</li>
     </ul>
 </div>
-

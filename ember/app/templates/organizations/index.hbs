@@ -60,7 +60,7 @@
 
             <div class="list-group">
                 {{#each filteredContent}}
-                    {{organization-details organization=this classNames='list-group-item'}}
+                    {{organization-details organization=this action='updateRanking' classNames='list-group-item'}}
                 {{else}}
                     <div class="list-group-item">
                         Nenhuma empresa encontrada

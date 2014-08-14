@@ -6,13 +6,10 @@ EmberApp.OrganizationRoute = Ember.Route.extend( {
 
         if ( params.organizationId === 'nova' )
         {
-            this.set( '_index', -1 );
             return Ember.RSVP.resolve( EmberApp.Organization.createRecord( { organizationId : 0 } ) );
         }
 
         organization = this.modelFor( 'organizations' ).findBy( 'organizationId', +params.organizationId ).copy();
-
-        organization.set( 'organizationId', +params.organizationId );
 
         return Ember.RSVP.resolve( organization );
     },
@@ -20,8 +17,67 @@ EmberApp.OrganizationRoute = Ember.Route.extend( {
     actions : {
         save     : function ( organization )
         {
+            var self = this;
+            var organizations = this.modelFor( 'organizations' );
+            var id;
 
+            if ( organization.get( 'isNew' ) )
+            {
+                return new Ember.RSVP.Promise( function ( resolve, reject )
+                {
+                    EmberApp.Adapter.ajax( '/organizations', {
+                        type : 'POST',
+                        data : organization.serialize()
+                    } ).done(function ( response )
+                    {
+                        organization.deserialize( response );
+                        organization.set( 'isDirty', false );
+                        organization.set( 'isNew', false );
+
+                        organizations.pushObject( organization );
+
+                        toastr.success( 'Empresa criada com sucesso' );
+                        self.transitionTo( 'organizations' );
+
+                        resolve( organization );
+                    } ).fail( function ()
+                    {
+                        toastr.error( 'Erro ao criar a empresa' );
+                        reject( 'unexpected server error on POST' );
+                    } );
+                } );
+            }
+            else
+            {
+                id = +organization.get( 'organizationId' );
+
+                return new Ember.RSVP.Promise( function ( resolve, reject )
+                {
+                    EmberApp.Adapter.ajax( '/organizations/' + id, {
+                        type : 'PUT',
+                        data : organization.serialize()
+                    } ).done(function ( response )
+                    {
+                        var current = organizations.findBy( 'organizationId', id );
+
+                        current.deserialize( response );
+                        current.set( 'isDirty', false );
+
+                        organization.destroy();
+
+                        toastr.success( 'Empresa salva com sucesso' );
+                        self.transitionTo( 'organizations' );
+
+                        resolve( current );
+                    } ).fail( function ()
+                    {
+                        toastr.error( 'Erro ao salvar a empresa' );
+                        reject( 'unexpected server error on PUT' );
+                    } );
+                } );
+            }
         },
+
         'delete' : function ( organization )
         {
             var self = this;
@@ -43,43 +99,15 @@ EmberApp.OrganizationRoute = Ember.Route.extend( {
                     var current = organizations.findBy( 'organizationId', organization.get( 'organizationId' ) );
 
                     organizations.removeObject( current );
+                    current.destroy();//
 
                     toastr.success( 'Empresa excluída com sucesso' );
-                    self.transitionTo( 'organizations.index' );
+                    self.transitionTo( 'organizations' );
 
                     resolve( true );
                 } ).fail( function ()
                 {
                     toastr.error( 'Houve um erro ao excluir a empresa' );
-                    reject( 'unexpected server error PUT ranking' );
-                } );
-            } );
-        },
-
-        'updateRanking' : function ( value )
-        {
-            var organization = this.context;
-            var id = organization.get( 'organizationId' );
-            var organizations = this.modelFor( 'organizations' );
-
-            if ( organization.get( 'isNew' ) )
-            {
-                return Ember.RSVP.reject( 'Can\'t update new record' );
-            }
-
-            return new Ember.RSVP.Promise( function ( resolve, reject )
-            {
-                EmberApp.Adapter.ajax( '/organizations/' + id, {
-                    type : 'PUT',
-                    data : { ranking : value }
-                } ).done(function ()
-                {
-                    organization.set( 'ranking', value );
-                    organizations.findBy( 'organizationId', id ).set( 'ranking', value );
-
-                    resolve( true );
-                } ).fail( function ()
-                {
                     reject( 'unexpected server error PUT ranking' );
                 } );
             } );

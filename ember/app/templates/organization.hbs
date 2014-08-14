@@ -8,13 +8,14 @@
 <div class="col-xs-12 col-sm-8 ag-card">
 
 <form {{action 'save' model on='submit'}}>
+
 {{#unless isNew}}
 <div class="ag-card-info">
-    {{ag-ranking ranking=ranking action="updateRanking"}}
+    {{ag-ranking ranking=ranking action='updateRanking'}}
 </div>
 {{/unless}}
 
-<p><strong>Categoria:</strong> {{category.name}}</p>
+<p><strong>Categoria:</strong> {{categoryName}}</p>
 <p><strong>Telefone:</strong> {{phoneNumber.number}}</p>
 
 {{#if isDirty}}
@@ -40,6 +41,7 @@
         <div class="col-sm-9">
             {{view Ember.Select classNames='form-control'
                 content=categories
+                optionValuePath='content.categoryId'
                 optionLabelPath='content.name'
                 prompt='Selecione'
                 value=category}}

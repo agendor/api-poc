@@ -14,14 +14,15 @@ EmberApp.OrganizationsIndexController = Ember.ArrayController.extend( {
 
         return this.get( 'arrangedContent' ).filter( function ( organization )
         {
-            return organization.get( 'nickname' ).match( re );
+            return organization.get( 'nickname' ).match( re ) &&
+            !(organization.get( 'isDestroying' ) || organization.get( 'isDestroyed' ));
         } );
-    }.property( 'arrangedContent', 'filter' ),
+    }.property( 'filter', 'arrangedContent.@each' ),
 
     filteredCount : function ()
     {
         return this.get( 'filteredContent' ).get( 'length' );
-    }.property( 'filteredContent' ),
+    }.property( 'filteredContent.length' ),
 
     orders : [
         { label : 'Ranking (maior > menor)', property : 'ranking', ascending : false },
@@ -37,17 +38,19 @@ EmberApp.OrganizationsIndexController = Ember.ArrayController.extend( {
     {
         var order = this.get( 'order' );
 
-        this.set( 'sortProperties', [order.property] );
         this.set( 'sortAscending', order.ascending );
+        this.set( 'sortProperties', [order.property] );
 
-    }.observes( 'order', 'filteredContent.@each.ranking' ),
+    }.observes( 'order', 'filteredContent.@each' ),
 
     init : function ()
     {
-        this._super();
-
         var orders = this.get( 'orders' );
 
         this.set( 'order', orders.findBy( 'property', 'nickname' ) );
+        this.set( 'sortAscending', true );
+        this.set( 'sortProperties', ['nickname'] );
+
+        this._super();
     }
 } );

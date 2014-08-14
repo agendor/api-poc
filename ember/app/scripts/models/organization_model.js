@@ -88,7 +88,9 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, Ember.Copyab
 
     categoryName : function ()
     {
-        return EmberApp.Category.FIXTURES.findBy( 'categoryId', this.get( 'category' ) );
+        var category = EmberApp.Category.FIXTURES.findBy( 'categoryId', this.get( 'category' ) );
+
+        return category.name;
     }.property( 'category' ),
 
     isDirty : false,
@@ -101,17 +103,20 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, Ember.Copyab
     /** overrides Ember.Copyable */
     copy : function ()
     {
-        return EmberApp.Organization.createRecord( JSON.parse( this.serialize() ) );
+        var id = +this.get('organizationId');
+        var copy = EmberApp.Organization.createRecord( JSON.parse( this.serialize() ) );
+
+        copy.set('organizationId', id);
+        copy.set('isDirty', false);
+
+        return copy;
     },
 
     validate : function ()
     {
         var nickname = this.get( 'nickname' );
         return !!(nickname && nickname.trim());
-    }
-} );
-
-EmberApp.Organization.reopenClass( {
+    },
 
     set : function ( property, value )
     {
@@ -120,97 +125,24 @@ EmberApp.Organization.reopenClass( {
             this.set( 'isDirty', true );
         }
         return this._super( property, value );
-    },
+    }
+} );
 
+// static methods
+EmberApp.Organization.reopenClass( {
     createRecord : function ( data )
     {
+        var current;
+
         if ( data.category && data.category.categoryId )
         {
             data.category = data.category.categoryId;
         }
 
-        return EmberApp.Organization.create( data );
-    },
+        current = EmberApp.Organization.create( data );
 
-    updateRanking : function ()
-    {
-        var self = this;
+        current.set('isDirty', false);
 
-        return Ember.RSVP.Promise( function ( resolve, reject )
-        {
-            if ( self.get( 'isNew' ) )
-            {
-                reject( 'Can\'t update new record' );
-            }
-            else
-            {
-                EmberApp.Adapter.ajax( '/organizations/' + self.get( 'organizationId' ), {
-                    type : 'PUT',
-                    data : JSON.stringify( { ranking : self.get( 'ranking' ) } )
-                } ).done(function ()
-                {
-                    resolve( true );
-                } ).fail( function ()
-                {
-                    reject( 'unexpected server error PUT ranking' );
-                } );
-            }
-        } );
-    },
-    save          : function ()
-    {
-        var self = this;
-
-        if ( this.get( 'isNew' ) )
-        {
-            return Ember.RSVP.Promise( function ( resolve, reject )
-            {
-                EmberApp.Adapter.ajax( '/organizations', {
-                    type : 'POST',
-                    data : self.serialize()
-                } ).done(function ( response )
-                {
-                    self.deserialize( response );
-
-                    self.set( 'isDirty', false );
-                    self.set( 'isNew', false );
-
-                    resolve( self );
-                } ).fail( function ()
-                {
-                    reject( 'unexpected server error on POST' );
-                } );
-            } );
-        }
-        else
-        {
-            return Ember.RSVP.Promise( function ( resolve, reject )
-            {
-                EmberApp.Adapter.ajax( '/organizations/' + self.get( 'organizationId' ), {
-                    type : 'PUT',
-                    data : this.serialize()
-                } ).done(function ( response )
-                {
-                    self.deserialize( response );
-
-                    self.set( 'isDirty', false );
-
-                    resolve( self );
-                } ).fail( function ()
-                {
-                    reject( 'unexpected server error on PUT' );
-                } );
-            } );
-        }
-        /*
-         var _clone = JSON.parse( this.serialize() );
-
-         if ( _clone.category && _clone.category.categoryId )
-         {
-         _clone.category = +_clone.category.categoryId;
-         }
-
-         this.deserialize( _clone );
-         */
+        return current;
     }
 } );

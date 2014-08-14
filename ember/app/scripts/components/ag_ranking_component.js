@@ -56,5 +56,5 @@ EmberApp.AgRankingComponent = Ember.Component.extend( {
             this.set( 'initiated', true );
             Ember.run.scheduleOnce( 'afterRender', this, this.mouseLeave );
         }
-    }.observes( 'currentRanking' ).on( 'didInsertElement' )
+    }.observes( 'currentRanking', 'ranking' ).on( 'didInsertElement' )
 } );

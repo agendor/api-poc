@@ -19,5 +19,35 @@ EmberApp.OrganizationsRoute = Ember.Route.extend( {
                 reject( error.statusText || 'unexpected server error' );
             } );
         } );
+    },
+
+    actions: {
+        'updateRanking' : function ( organization, ranking )
+        {
+            var id = organization.get( 'organizationId' );
+            var organizations = this.context;
+
+            if ( organization.get( 'isNew' ) )
+            {
+                return Ember.RSVP.reject( 'Can\'t update new record' );
+            }
+
+            return new Ember.RSVP.Promise( function ( resolve, reject )
+            {
+                EmberApp.Adapter.ajax( '/organizations/' + id, {
+                    type : 'PUT',
+                    data : { ranking : ranking }
+                } ).done(function ()
+                {
+                    organization.set( 'ranking', ranking );
+                    organizations.findBy( 'organizationId', id ).set( 'ranking', ranking );
+
+                    resolve( true );
+                } ).fail( function ()
+                {
+                    reject( 'unexpected server error PUT ranking' );
+                } );
+            } );
+        }
     }
 } );

@@ -12,3 +12,4 @@ EmberApp.IndexRoute = Ember.Route.extend( {
         this.transitionTo( 'organizations' );
     }
 } );
+
