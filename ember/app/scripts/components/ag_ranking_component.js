@@ -13,7 +13,6 @@ EmberApp.AgRankingComponent = Ember.Component.extend( {
         {
             var ranking = this.get( 'ranking' );
             var index = star.index;
-            var i;
 
             if ( index === ranking )
             {
