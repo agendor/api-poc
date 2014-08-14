@@ -23,29 +23,31 @@ EmberApp.OrganizationsIndexController = Ember.ArrayController.extend( {
         return this.get( 'filteredContent' ).get( 'length' );
     }.property( 'filteredContent' ),
 
-    orders: [
-        Ember.Object.create({ label: 'Ranking (maior > menor)', property: 'ranking', ascending: true }),
-        Ember.Object.create({ label: 'Ranking (menor > maior)', property: 'ranking', ascending: false }),
-        Ember.Object.create({ label: 'Ordem alfabética', property: 'nickname', ascending: true }),
-        Ember.Object.create({ label: 'Data de cadastro (recente > antigo)', property: 'createTime', ascending: false }),
-        Ember.Object.create({ label: 'Data de cadastro (antigo > recente)', property: 'createTime', ascending: true })
-     ],
+    orders : [
+        { label : 'Ranking (maior > menor)', property : 'ranking', ascending : false },
+        { label : 'Ranking (menor > maior)', property : 'ranking', ascending : true },
+        { label : 'Ordem alfabética', property : 'nickname', ascending : true },
+        { label : 'Data de cadastro (recente > antigo)', property : 'createTime', ascending : false },
+        { label : 'Data de cadastro (antigo > recente)', property : 'createTime', ascending : true }
+    ],
 
-    order: null,
+    order : null,
 
-    orderChanged : function () {
-        var order = this.get('order');
+    orderChanged : function ()
+    {
+        var order = this.get( 'order' );
 
-        this.set('sortProperties', [ order.property ]);
-        this.set('sortAscending', order.ascending);
+        this.set( 'sortProperties', [order.property] );
+        this.set( 'sortAscending', order.ascending );
 
-    }.observes('order', 'filteredContent.@each.ranking'),
+    }.observes( 'order', 'filteredContent.@each.ranking' ),
 
-    init: function () {
+    init : function ()
+    {
         this._super();
 
-        var orders = this.get('orders');
+        var orders = this.get( 'orders' );
 
-        this.set('order', orders.findBy('property', 'nickname'));
+        this.set( 'order', orders.findBy( 'property', 'nickname' ) );
     }
 } );

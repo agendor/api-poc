@@ -1,13 +1,50 @@
 /* global $ */
 var EmberApp = window.EmberApp = Ember.Application.create( {
-    LOG_TRANSITIONS : true,
-    BASE_URL        : 'http://localhost:8000'
+    LOG_TRANSITIONS : true
 } );
 
-$.ajaxSetup( {
-    headers     : { 'Authorization' : 'Basic dEB0LmNvbToxMjM='},
-    contentType : 'application/json; charset=utf-8',
-    dataType    : 'json'
+Ember.RSVP.configure( 'onerror', function ( error )
+{
+    if ( error instanceof Error )
+    {
+        Ember.Logger.assert( false, error );
+        Ember.Logger.error( error.stack );
+    }
+} );
+
+EmberApp.Adapter = {
+    ajax : function ( path, options )
+    {
+        options = options || {};
+        options.dataType = 'json';
+        options.contentType = 'application/json; charset=utf-8';
+        options.headers = { 'Authorization' : 'Basic dEB0LmNvbToxMjM='};
+
+        if ( typeof options.data === 'object' )
+        {
+            options.data = JSON.stringify( options.data );
+        }
+
+        return Ember.$.ajax( 'http://localhost:8000' + path, options );
+    }
+};
+
+/**
+ * @ref http://stackoverflow.com/a/10260347
+ */
+EmberApp.Serializable = Ember.Mixin.create( {
+    serialize : function ()
+    {
+        var propertyNames = this.get( 'propertyNames' ) || [];
+        var pojo = _stripEmptyAttributes( this.getProperties( propertyNames ) );
+
+        return JSON.stringify( pojo );
+    },
+
+    deserialize : function ( hash )
+    {
+        this.setProperties( hash );
+    }
 } );
 
 /**
@@ -75,24 +112,6 @@ var _stripEmptyAttributes = function _stripEmptyAttributes ( obj, level )
 
     return obj;
 };
-
-/**
- * @ref http://stackoverflow.com/a/10260347
- */
-EmberApp.Serializable = Ember.Mixin.create( {
-    serialize : function ()
-    {
-        var propertyNames = this.get( 'propertyNames' ) || [];
-        var pojo = _stripEmptyAttributes( this.getProperties( propertyNames ) );
-
-        return JSON.stringify( pojo );
-    },
-
-    deserialize : function ( hash )
-    {
-        this.setProperties( hash );
-    }
-} );
 
 /* Order and include as you please. */
 require( 'scripts/controllers/*' );

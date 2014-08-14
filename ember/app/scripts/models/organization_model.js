@@ -1,19 +1,52 @@
 /*global Ember, $*/
 
 // ----------------------------------- ORGANIZATION
-EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
+EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, Ember.Copyable, {
     propertyNames : [
-        'nickname', 'phones', 'ranking', 'cnpj', 'website', 'category', 'address'
+        'nickname', 'legalName', 'ranking', 'cnpj', 'website', 'category', 'phones', 'address', 'social'
     ],
+
+    organizationId : 0,
+    nickname       : '',
+    legalName      : '',
+    ranking        : 0,
+    cnpj           : '',
+    website        : '',
+    category       : 31,
+    phones         : [
+        {
+            number : '',
+            type   : 'work'
+        },
+        {
+            number : '',
+            type   : 'mobile'
+        },
+        {
+            number : '',
+            type   : 'fax'
+        }
+    ],
+    address        : {
+        postalCode     : '',
+        country        : '',
+        state          : '',
+        city           : '',
+        district       : '',
+        streetName     : '',
+        streetNumber   : 0,
+        additionalInfo : ''
+    },
+    social         : {
+        facebook : '',
+        twitter  : '',
+        skype    : '',
+        linkedIn : ''
+    },
 
     avatar : function ()
     {
-        var id = this.get( 'organizationId' );
-
-        id = (+id % 10) + 1;
-
-        return 'http://lorempixel.com/150/150/people/' + id;
-
+        return 'http://lorempixel.com/150/150/people/' + ((+this.get( 'organizationId' ) % 10) + 1);
     }.property( 'organizationId' ),
 
     phoneNumber : function ( key, value )
@@ -24,9 +57,7 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
         if ( !phones || !phones.length )
         {
             phones = [
-                {
-                    type : 'work', number : null
-                }
+                { type : 'work', number : null }
             ];
         }
 
@@ -55,18 +86,32 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
         return phone;
     }.property( 'phones' ),
 
+    categoryName : function ()
+    {
+        return EmberApp.Category.FIXTURES.findBy( 'categoryId', this.get( 'category' ) );
+    }.property( 'category' ),
+
     isDirty : false,
 
     isNew : function ()
     {
-        var id = this.get( 'organizationId' );
-        return +id === 0;
+        return +this.get( 'organizationId' ) === 0;
     }.property( 'organizationId' ),
+
+    /** overrides Ember.Copyable */
+    copy : function ()
+    {
+        return EmberApp.Organization.createRecord( JSON.parse( this.serialize() ) );
+    },
 
     validate : function ()
     {
-        return true;
-    },
+        var nickname = this.get( 'nickname' );
+        return !!(nickname && nickname.trim());
+    }
+} );
+
+EmberApp.Organization.reopenClass( {
 
     set : function ( property, value )
     {
@@ -77,167 +122,95 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, {
         return this._super( property, value );
     },
 
+    createRecord : function ( data )
+    {
+        if ( data.category && data.category.categoryId )
+        {
+            data.category = data.category.categoryId;
+        }
+
+        return EmberApp.Organization.create( data );
+    },
+
     updateRanking : function ()
     {
-        var deferred = $.Deferred();
+        var self = this;
 
-        var ranking = this.get( 'ranking' );
-
-        if ( this.get( 'organizationId' ) === 0 )
+        return Ember.RSVP.Promise( function ( resolve, reject )
         {
-            deferred.reject( 'Can\'t update new record' );
-        }
-        else
-        {
-            $.ajax( {
-                url  : EmberApp.BASE_URL + '/organizations/' + this.get( 'organizationId' ),
-                type : 'PUT',
-                data : JSON.stringify( { ranking : this.get( 'ranking' ) } )
-            } ).done(function ()
+            if ( self.get( 'isNew' ) )
             {
-                deferred.resolve( true );
-            } ).fail( function ()
+                reject( 'Can\'t update new record' );
+            }
+            else
             {
-                deferred.reject( 'unexpected server error PUT ranking' );
-            } );
-        }
-
-        return deferred.promise();
+                EmberApp.Adapter.ajax( '/organizations/' + self.get( 'organizationId' ), {
+                    type : 'PUT',
+                    data : JSON.stringify( { ranking : self.get( 'ranking' ) } )
+                } ).done(function ()
+                {
+                    resolve( true );
+                } ).fail( function ()
+                {
+                    reject( 'unexpected server error PUT ranking' );
+                } );
+            }
+        } );
     },
     save          : function ()
     {
-        var deferred = $.Deferred();
-
         var self = this;
 
-        var _clone = JSON.parse(this.serialize(  ));
-
-        if ( _clone.category && _clone.category.categoryId ) {
-            _clone.category = +_clone.category.categoryId;
-        }
-
-        this.deserialize( _clone );
-
-        if ( this.get( 'organizationId' ) === 0 )
+        if ( this.get( 'isNew' ) )
         {
-            $.ajax( {
-                url  : EmberApp.BASE_URL + '/organizations',
-                type : 'POST',
-                data : this.serialize()
-            } ).done(function ( response )
+            return Ember.RSVP.Promise( function ( resolve, reject )
             {
-                self.deserialize( response );
+                EmberApp.Adapter.ajax( '/organizations', {
+                    type : 'POST',
+                    data : self.serialize()
+                } ).done(function ( response )
+                {
+                    self.deserialize( response );
 
-                self.set( 'isDirty', false );
-                self.set( 'isNew', false );
+                    self.set( 'isDirty', false );
+                    self.set( 'isNew', false );
 
-                deferred.resolve( self );
-            } ).fail( function ()
-            {
-                deferred.reject( 'unexpected server error on POST' );
+                    resolve( self );
+                } ).fail( function ()
+                {
+                    reject( 'unexpected server error on POST' );
+                } );
             } );
         }
         else
         {
-            $.ajax( {
-                url  : EmberApp.BASE_URL + '/organizations/' + this.get( 'organizationId' ),
-                type : 'PUT',
-                data : this.serialize()
-            } ).done(function ( response )
+            return Ember.RSVP.Promise( function ( resolve, reject )
             {
-                self.deserialize( response );
+                EmberApp.Adapter.ajax( '/organizations/' + self.get( 'organizationId' ), {
+                    type : 'PUT',
+                    data : this.serialize()
+                } ).done(function ( response )
+                {
+                    self.deserialize( response );
 
-                self.set( 'isDirty', false );
+                    self.set( 'isDirty', false );
 
-                deferred.resolve( self );
-            } ).fail( function ()
-            {
-                deferred.reject( 'unexpected server error on PUT' );
+                    resolve( self );
+                } ).fail( function ()
+                {
+                    reject( 'unexpected server error on PUT' );
+                } );
             } );
         }
+        /*
+         var _clone = JSON.parse( this.serialize() );
 
-        return deferred.promise();
-    },
-    'delete'      : function ()
-    {
-        var deferred = $.Deferred();
+         if ( _clone.category && _clone.category.categoryId )
+         {
+         _clone.category = +_clone.category.categoryId;
+         }
 
-        if ( this.get( 'organizationId' ) === 0 )
-        {
-            deferred.reject( 'Can\'t delete a new organization' );
-        }
-        else
-        {
-            $.ajax( {
-                url  : EmberApp.BASE_URL + '/organizations/' + this.get( 'organizationId' ),
-                type : 'DELETE'
-            } ).done(function ()
-            {
-                deferred.resolve( true );
-            } ).fail( function ()
-            {
-                deferred.reject( 'unexpected server error on DELETE' );
-            } );
-        }
-
-        return deferred.promise();
+         this.deserialize( _clone );
+         */
     }
 } );
-
-EmberApp.Organization.all = function ()
-{
-    var deferred = $.Deferred();
-
-    $.ajax( {
-        url  : EmberApp.BASE_URL + '/organizations',
-        type : 'GET'
-    } ).done(function ( response )
-    {
-        deferred.resolve( response.map( function ( item )
-        {
-            if ( item.category )
-            {
-                item.category = EmberApp.Category.get( item.category.categoryId );
-            }
-
-            return EmberApp.Organization.create( item );
-        } ) );
-    } ).fail( function ()
-    {
-        deferred.reject( 'unexpected server error on GET all' );
-    } );
-
-    return deferred.promise();
-};
-
-EmberApp.Organization.get = function ( id )
-{
-    var deferred = $.Deferred();
-
-    id = +id;
-
-    if ( typeof id === 'number' && id > 0 )
-    {
-        $.ajax( {
-            url  : EmberApp.BASE_URL + '/organizations/' + id,
-            type : 'GET'
-        } ).done(function ( item )
-        {
-            if ( item.category )
-            {
-                item.category = EmberApp.Category.get( item.category.categoryId );
-            }
-
-            deferred.resolve( EmberApp.Organization.create( item ) );
-        } ).fail( function ()
-        {
-            deferred.reject( 'unexpected server error on GET ' + id );
-        } );
-    }
-    else
-    {
-        deferred.resolve( EmberApp.Organization.create( {organizationId : 0, phones : []} ) );
-    }
-
-    return deferred.promise();
-};
