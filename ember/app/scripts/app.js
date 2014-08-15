@@ -18,14 +18,14 @@ EmberApp.Adapter = {
         options = options || {};
         options.dataType = 'json';
         options.contentType = 'application/json; charset=utf-8';
-        options.headers = { 'Authorization' : 'Basic dEB0LmNvbToxMjM='};
+        options.headers = { 'Authorization' : 'Basic dGVzdGVAYWdlbmRvci5jb20uYnI6YWdlbmRvcl8yMDE0'};
 
         if ( typeof options.data === 'object' )
         {
             options.data = JSON.stringify( options.data );
         }
 
-        return Ember.$.ajax( 'http://localhost:8000' + path, options );
+        return Ember.$.ajax( 'https://api.agendor.com.br/v1' + path, options );
     }
 };
 

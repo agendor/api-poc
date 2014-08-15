@@ -4,7 +4,7 @@ describe( 'Directive: agOrganizationCard', function ()
 {
     var $elem, scope, html, organization, $httpBackend, ctrl;
 
-    var BASE_URL = 'http://localhost:8000/organizations';
+    var BASE_URL;
 
     html = '<ag-organization-card organization="organization"></ag-organization-card>';
 
@@ -41,8 +41,10 @@ describe( 'Directive: agOrganizationCard', function ()
     } ) );
 
     // mock back-end
-    beforeEach( inject( function ( $injector )
+    beforeEach( inject( function ( $injector, _BASE_URL_ )
     {
+        BASE_URL = _BASE_URL_ + '/organizations';
+
         // Set up the mock http service responses
         $httpBackend = $injector.get( '$httpBackend' );
 

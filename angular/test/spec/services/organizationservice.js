@@ -6,8 +6,7 @@ describe( 'Service: OrganizationService', function ()
     var $$rootScope, $httpBackend, OrganizationService;
 
     // constants from service
-    var BASE_URL = 'http://localhost:8000/organizations';
-    //    var AUTH_TOKEN = 'Basic dEB0LmNvbToxMjM=';
+    var BASE_URL;
 
     beforeEach( module( 'angularApp' ) );
 
@@ -30,8 +29,9 @@ describe( 'Service: OrganizationService', function ()
         } );
     } ) );
 
-    beforeEach( inject( function ( $rootScope, _OrganizationService_ )
+    beforeEach( inject( function ( $rootScope, _OrganizationService_, _BASE_URL_ )
     {
+        BASE_URL = _BASE_URL_ + '/organizations';
         $$rootScope = $rootScope;
         OrganizationService = _OrganizationService_;
     } ) );

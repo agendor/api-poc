@@ -6,7 +6,7 @@ EmberApp.OrganizationsRoute = Ember.Route.extend( {
 
         return new Ember.RSVP.Promise( function ( resolve, reject )
         {
-            EmberApp.Adapter.ajax( '/organizations' ).done(function ( data )
+            EmberApp.Adapter.ajax( '/organizations?per_page=25' ).done(function ( data )
             {
                 data.forEach( function ( item )
                 {

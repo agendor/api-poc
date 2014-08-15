@@ -13,8 +13,8 @@
 angular.module( 'angularApp', [
     'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'angular-data.DSCacheFactory'
 ] )
-.constant('BASE_URL', 'http://localhost:8000')
-.constant('AUTH_TOKEN', 'Basic dEB0LmNvbToxMjM=')
+.constant('BASE_URL', 'https://api.agendor.com.br/v1')
+.constant('AUTH_TOKEN', 'Basic dGVzdGVAYWdlbmRvci5jb20uYnI6YWdlbmRvcl8yMDE0')
 .config( [
     '$routeProvider', '$httpProvider', 'AUTH_TOKEN', function ( $routeProvider, $httpProvider, AUTH_TOKEN )
     {

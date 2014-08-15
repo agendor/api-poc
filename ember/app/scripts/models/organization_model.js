@@ -90,7 +90,12 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, Ember.Copyab
     {
         var category = EmberApp.Category.FIXTURES.findBy( 'categoryId', this.get( 'category' ) );
 
-        return category.name;
+        if ( category && category.name )
+        {
+            return category.name;
+        }
+
+        return 'Não informado';
     }.property( 'category' ),
 
     isDirty : false,
@@ -103,11 +108,11 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, Ember.Copyab
     /** overrides Ember.Copyable */
     copy : function ()
     {
-        var id = +this.get('organizationId');
+        var id = +this.get( 'organizationId' );
         var copy = EmberApp.Organization.createRecord( JSON.parse( this.serialize() ) );
 
-        copy.set('organizationId', id);
-        copy.set('isDirty', false);
+        copy.set( 'organizationId', id );
+        copy.set( 'isDirty', false );
 
         return copy;
     },
@@ -118,7 +123,8 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, Ember.Copyab
         return !!(nickname && nickname.trim());
     },
 
-    deserialize: function ( data ) {
+    deserialize : function ( data )
+    {
         if ( data.category && data.category.categoryId )
         {
             data.category = data.category.categoryId;
@@ -147,7 +153,7 @@ EmberApp.Organization.reopenClass( {
 
         current.deserialize( data );
 
-        current.set('isDirty', false);
+        current.set( 'isDirty', false );
 
         return current;
     }
