@@ -40,11 +40,11 @@ angular.module( 'angularApp' ).controller( 'MainCtrl', [
                     break;
                 case 3:
                     _orderPredicate = 'createTime';
-                    _orderReverse = false;
+                    _orderReverse = true;
                     break;
                 case 4:
                     _orderPredicate = 'createTime';
-                    _orderReverse = true;
+                    _orderReverse = false;
                     break;
             }
 

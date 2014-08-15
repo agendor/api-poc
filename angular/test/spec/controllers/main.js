@@ -88,7 +88,7 @@ describe( 'Controller: MainCtrl', function ()
 
     it( 'should order the organizations by createTime (ascending)', function ()
     {
-        var _organizations = $$filter( 'orderBy' )( organizationsMock, 'createTime', false );
+        var _organizations = $$filter( 'orderBy' )( organizationsMock, 'createTime', true );
 
         ctrl.orderIndex = 3;
         ctrl.updateFilter( '' );
@@ -100,7 +100,7 @@ describe( 'Controller: MainCtrl', function ()
 
     it( 'should order the organizations by ranking (descending)', function ()
     {
-        var _organizations = $$filter( 'orderBy' )( organizationsMock, 'createTime', true );
+        var _organizations = $$filter( 'orderBy' )( organizationsMock, 'createTime', false );
 
         ctrl.orderIndex = 4;
         ctrl.updateFilter( '' );
