@@ -30,24 +30,6 @@ EmberApp.Adapter = {
 };
 
 /**
- * @ref http://stackoverflow.com/a/10260347
- */
-EmberApp.Serializable = Ember.Mixin.create( {
-    serialize : function ()
-    {
-        var propertyNames = this.get( 'propertyNames' ) || [];
-        var pojo = _stripEmptyAttributes( this.getProperties( propertyNames ) );
-
-        return JSON.stringify( pojo );
-    },
-
-    deserialize : function ( hash )
-    {
-        this.setProperties( hash );
-    }
-} );
-
-/**
  * checks if an object has no properties
  * @param {object} obj
  * @returns {boolean}
@@ -112,6 +94,25 @@ var _stripEmptyAttributes = function _stripEmptyAttributes ( obj, level )
 
     return obj;
 };
+
+
+/**
+ * @ref http://stackoverflow.com/a/10260347
+ */
+EmberApp.Serializable = Ember.Mixin.create( {
+    serialize : function ()
+    {
+        var propertyNames = this.get( 'propertyNames' ) || [];
+        var pojo = _stripEmptyAttributes( this.getProperties( propertyNames ) );
+
+        return JSON.stringify( pojo );
+    },
+
+    deserialize : function ( hash )
+    {
+        this.setProperties( hash );
+    }
+} );
 
 /* Order and include as you please. */
 require( 'scripts/controllers/*' );

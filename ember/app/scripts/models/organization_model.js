@@ -118,6 +118,15 @@ EmberApp.Organization = Ember.Object.extend( EmberApp.Serializable, Ember.Copyab
         return !!(nickname && nickname.trim());
     },
 
+    deserialize: function ( data ) {
+        if ( data.category && data.category.categoryId )
+        {
+            data.category = data.category.categoryId;
+        }
+
+        this._super( data );
+    },
+
     set : function ( property, value )
     {
         if ( property !== 'isDirty' ) // avoids infinite recursion
@@ -134,12 +143,9 @@ EmberApp.Organization.reopenClass( {
     {
         var current;
 
-        if ( data.category && data.category.categoryId )
-        {
-            data.category = data.category.categoryId;
-        }
+        current = EmberApp.Organization.create( {} );
 
-        current = EmberApp.Organization.create( data );
+        current.deserialize( data );
 
         current.set('isDirty', false);
 

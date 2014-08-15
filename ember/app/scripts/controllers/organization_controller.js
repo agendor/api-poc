@@ -1,4 +1,4 @@
-/* global toastr, confirm */
+/* global confirm */
 EmberApp.OrganizationController = Ember.ObjectController.extend( {
 
     categories : function ()
