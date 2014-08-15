@@ -63,6 +63,10 @@ angular.module( 'angularApp' ).directive( 'agRanking', function ()
                 $element.on( 'mouseleave', _mouseLeave );
 
                 _build();
+
+                $scope.$on('$destroy', function () {
+                    $element.off();
+                });
             }
         ]
     };
