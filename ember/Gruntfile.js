@@ -27,6 +27,10 @@ module.exports = function (grunt) {
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
+            bower: {
+                files: ['bower.json'],
+                tasks: ['wiredep']
+            },
             emberTemplates: {
                 files: '<%= yeoman.app %>/templates/**/*.hbs',
                 tasks: ['emberTemplates']
@@ -150,6 +154,16 @@ module.exports = function (grunt) {
                 }
             }
         },
+    // Automatically inject Bower components into the app
+    wiredep: {
+      options: {
+        cwd: '<%= yeoman.app %>'
+      },
+      app: {
+        src: ['<%= yeoman.app %>/index.html'],
+        ignorePath:  /\.\.\//
+      }
+    },
         // not used since Uglify task does concat,
         // but still available if needed
         /*concat: {
@@ -182,7 +196,7 @@ module.exports = function (grunt) {
         },
         usemin: {
             html: ['<%= yeoman.dist %>/{,*/}*.html'],
-            css: ['<%= yeoman.dist %>/styles/{,*/}*.css','<%= yeoman.dist %>/bower_components/toastr/toastr.css',],
+            css: ['<%= yeoman.dist %>/styles/{,*/}*.css','<%= yeoman.dist %>/bower_components/toastr/toastr.css'],
             options: {
                 dirs: ['<%= yeoman.dist %>']
             }
@@ -351,6 +365,7 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'clean:server',
+            'wiredep',
             'replace:app',
             'concurrent:server',
             'neuter:app',
@@ -372,6 +387,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
+        'wiredep',
         'replace:dist',
         'useminPrepare',
         'concurrent:dist',

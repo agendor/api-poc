@@ -7,43 +7,45 @@
  * # CategoryService
  * Service in the angularApp.
  */
-angular.module( 'angularApp' ).service( 'CategoryService', function CategoriaService ( $q )
-{
-    var data = [
-        {'categoryId' : 31, 'name' : 'Cliente efetivo'},
-        {'categoryId' : 32, 'name' : 'Cliente em potencial'},
-        {'categoryId' : 33, 'name' : 'Concorrente'},
-        {'categoryId' : 34, 'name' : 'Fornecedor'},
-        {'categoryId' : 35, 'name' : 'Parceiro'}
-    ];
+angular.module( 'angularApp' ).service( 'CategoryService', [
+    '$q', function ( $q )
+    {
+        var data = [
+            {'categoryId' : 31, 'name' : 'Cliente efetivo'},
+            {'categoryId' : 32, 'name' : 'Cliente em potencial'},
+            {'categoryId' : 33, 'name' : 'Concorrente'},
+            {'categoryId' : 34, 'name' : 'Fornecedor'},
+            {'categoryId' : 35, 'name' : 'Parceiro'}
+        ];
 
-    return {
-        get : function ( id )
-        {
-            var deferred = $q.defer();
-
-            if ( id )
+        return {
+            'get' : function ( id )
             {
-                var category = data.filter( function ( item )
-                {
-                    return item.categoryId === +id;
-                } )[0];
+                var deferred = $q.defer();
 
-                if ( category )
+                if ( id )
                 {
-                    deferred.resolve( category );
+                    var category = data.filter( function ( item )
+                    {
+                        return item.categoryId === +id;
+                    } )[0];
+
+                    if ( category )
+                    {
+                        deferred.resolve( category );
+                    }
+                    else
+                    {
+                        deferred.reject();
+                    }
                 }
                 else
                 {
-                    deferred.reject();
+                    deferred.resolve( data );
                 }
-            }
-            else
-            {
-                deferred.resolve( data );
-            }
 
-            return deferred.promise;
-        }
-    };
-} );
+                return deferred.promise;
+            }
+        };
+    }
+] );
