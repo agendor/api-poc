@@ -32,7 +32,10 @@ module.exports = function (grunt) {
                 tasks: ['emberTemplates']
             },
             compass: {
-                files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+                files: [
+                    '<%= yeoman.app %>/styles/{,*/}*.{scss,sass}',
+                    '<%= yeoman.app %>/bower_components/toastr/toastr.scss'
+                ],
                 tasks: ['compass:server']
             },
             neuter: {
@@ -164,6 +167,7 @@ module.exports = function (grunt) {
                     src: [
                         '<%= yeoman.dist %>/scripts/{,*/}*.js',
                         '<%= yeoman.dist %>/styles/{,*/}*.css',
+                        '<%= yeoman.dist %>/bower_components/toastr/toastr.css',
                         '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}',
                         '<%= yeoman.dist %>/styles/fonts/*'
                     ]
@@ -178,7 +182,7 @@ module.exports = function (grunt) {
         },
         usemin: {
             html: ['<%= yeoman.dist %>/{,*/}*.html'],
-            css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+            css: ['<%= yeoman.dist %>/styles/{,*/}*.css','<%= yeoman.dist %>/bower_components/toastr/toastr.css',],
             options: {
                 dirs: ['<%= yeoman.dist %>']
             }
@@ -208,7 +212,8 @@ module.exports = function (grunt) {
                 files: {
                     '<%= yeoman.dist %>/styles/main.css': [
                         '.tmp/styles/{,*/}*.css',
-                        '<%= yeoman.app %>/styles/{,*/}*.css'
+                        '<%= yeoman.app %>/styles/{,*/}*.css',
+                        '<%= yeoman.app %>/bower_components/toastr/toastr.css'
                     ]
                 }
             }
