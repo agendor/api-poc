@@ -13,7 +13,7 @@
 angular.module( 'angularApp', [
     'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'angular-data.DSCacheFactory'
 ] ).config( [
-    '$routeProvider', function ( $routeProvider )
+    '$routeProvider', '$httpProvider', function ( $routeProvider, $httpProvider )
     {
         $routeProvider.when( '/', {
             templateUrl  : 'views/main.html',
@@ -54,6 +54,15 @@ angular.module( 'angularApp', [
             }
         } ).otherwise( {
             redirectTo : '/'
+        } );
+
+        angular.extend( $httpProvider.defaults, {
+            'headers' : {
+                'common' : { 'Authorization' : 'Basic dEB0LmNvbToxMjM=' },
+                'post'   : { 'Content-Type' : 'application/json; charset=utf-8' },
+                'put'    : { 'Content-Type' : 'application/json; charset=utf-8' },
+                'delete' : { 'Content-Type' : 'application/json; charset=utf-8' }
+            }
         } );
     }
 ] ).run( [

@@ -12,7 +12,6 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
     '$q', '$http', 'DSCacheFactory', function ( $q, $http, DSCacheFactory )
     {
         var BASE_URL = 'http://localhost:8000/organizations';
-        var AUTH_TOKEN = 'Basic dEB0LmNvbToxMjM=';
 
         var dataCache = DSCacheFactory( 'organizationCache', {
             'maxAge'             : 90000,         // Items added to this cache expire after 15 minutes.
@@ -160,10 +159,7 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
         {
             var deferred = $q.defer();
 
-            $http.get( _toURL(), {
-                'cache'   : dataCache,
-                'headers' : { 'Authorization' : AUTH_TOKEN}
-            } ).then(function ( response )
+            $http.get( _toURL(), { 'cache'   : dataCache } ).then(function ( response )
             {
                 var organizations = response.data.map( function ( organization )
                 {
@@ -177,7 +173,7 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
                         'category'       : 31, // TODO: get from API
                         'phoneNumber'    : organization.phones && organization.phones.length &&
                         organization.phones[0].number,
-                        'avatar'         : 'http://lorempixel.com/150/150/nature/9'
+                        'avatar'         : 'http://lorempixel.com/150/150/nature/' + ((+organization.organizationId % 10) + 1)
                     };
 
                 } );
@@ -198,17 +194,21 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
         {
             var deferred = $q.defer();
 
-            $http.get( _toURL( id ), {
-                'cache'   : dataCache,
-                'headers' : { 'Authorization' : AUTH_TOKEN}
-            } ).then(function ( response )
+            var organization = dataCache.get( _toURL( id ) );
+
+            if ( organization && organization.nickname ) {
+                deferred.resolve( organization );
+                return deferred.promise;
+            }
+
+            $http.get( _toURL( id ), { 'cache'   : dataCache } ).then(function ( response )
             {
                 var organization = response.data;
 
                 organization.category = 31; // TODO: get from API
                 organization.phoneNumber =
                 organization.phones && organization.phones.length && organization.phones[0].number;
-                organization.avatar = 'http://lorempixel.com/150/150/nature/9';
+                organization.avatar = 'http://lorempixel.com/150/150/nature/' + ((+organization.organizationId % 10) + 1);
 
                 delete organization.phones;
 
@@ -229,11 +229,7 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
         {
             var deferred = $q.defer();
 
-            $http.put( _toURL( id ), {
-                'ranking' : raking
-            }, {
-                'headers' : { 'Authorization' : AUTH_TOKEN}
-            } ).then(function ( response )
+            $http.put( _toURL( id ), { 'ranking' : raking } ).then(function ( response )
             {
                 var organization = response.data;
 
@@ -256,9 +252,7 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
         {
             var deferred = $q.defer();
 
-            $http.delete( _toURL( id ), {
-                'headers' : { 'Authorization' : AUTH_TOKEN}
-            } ).then(function ()
+            $http.delete( _toURL( id ) ).then(function ()
             {
                 dataCache.remove( _toURL( id ) );
                 dataCache.remove( _toURL() );
@@ -289,9 +283,7 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
             }
             delete organization.phoneNumber;
 
-            $http.post( _toURL(), organization, {
-                'headers' : { 'Authorization' : AUTH_TOKEN}
-            } ).then(function ( response )
+            $http.post( _toURL(), organization ).then(function ( response )
             {
                 var organization = response.data;
 
@@ -343,9 +335,7 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
                 organization.userOwner = organization.userOwner.userId || 0;
             }
 
-            $http.put( _toURL( id ), organization, {
-                'headers' : { 'Authorization' : AUTH_TOKEN}
-            } ).then(function ( response )
+            $http.put( _toURL( id ), organization ).then(function ( response )
             {
                 var organization = response.data;
 

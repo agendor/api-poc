@@ -23,7 +23,6 @@ angular.module( 'angularApp' ).directive( 'agRanking', function ()
 
                 ctrl.stars = [];
                 ctrl.current = -1;
-                ctrl.initiated = false;
 
                 var _mouseEnter = function ()
                 {

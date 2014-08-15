@@ -112,7 +112,7 @@ describe( 'Service: OrganizationService', function ()
                 phones         : [
                     {number : '(11) 1234-0000'}
                 ],
-                avatar         : 'http://lorempixel.com/150/150/nature/9'
+                avatar         : 'http://lorempixel.com/150/150/nature/2'
             }
         ] );
 
@@ -132,7 +132,7 @@ describe( 'Service: OrganizationService', function ()
                 createTime     : '2014-08-07T11:39:00',
                 category       : 31,
                 phoneNumber    : '(11) 1234-0000',
-                avatar         : 'http://lorempixel.com/150/150/nature/9'
+                avatar         : 'http://lorempixel.com/150/150/nature/2'
             } );
 
             done();
@@ -156,7 +156,7 @@ describe( 'Service: OrganizationService', function ()
             phones         : [
                 {number : '(11) 1234-0000'}
             ],
-            avatar         : 'http://lorempixel.com/150/150/nature/9'
+            avatar         : 'http://lorempixel.com/150/150/nature/2'
         } );
 
         OrganizationService.get( 1 ).then(function ( organization )
@@ -170,7 +170,7 @@ describe( 'Service: OrganizationService', function ()
                 createTime     : '2014-08-07T11:39:00',
                 category       : 31,
                 phoneNumber    : '(11) 1234-0000',
-                avatar         : 'http://lorempixel.com/150/150/nature/9'
+                avatar         : 'http://lorempixel.com/150/150/nature/2'
             } );
 
             done();
@@ -194,7 +194,7 @@ describe( 'Service: OrganizationService', function ()
             phones         : [
                 {number : '(11) 1234-0000'}
             ],
-            avatar         : 'http://lorempixel.com/150/150/nature/9'
+            avatar         : 'http://lorempixel.com/150/150/nature/2'
         } );
 
         OrganizationService.updateRanking( 1, 5 ).then(function ( organization )

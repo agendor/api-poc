@@ -88,10 +88,10 @@
 
                 <h3>Produtos e serviços relacionados <small><span class="label label-info pull-right">novidade!</span></small></h3>
 
-                <p data-ng-show="!ctrl.showProducts"><a href="" data-ng-click="ctrl.showProducts = true">Adicionar endereço desta empresa</a></p>
-                <p data-ng-show="ctrl.showProducts"><a href="" data-ng-click="ctrl.showProducts = false">Esconder campos</a></p>
+                <p ng-show="!ctrl.showProducts"><a href="" ng-click="ctrl.showProducts = true">Adicionar endereço desta empresa</a></p>
+                <p ng-show="ctrl.showProducts"><a href="" ng-click="ctrl.showProducts = false">Esconder campos</a></p>
 
-                <div class="ag-slide ag-slide-tn" data-ng-class="{'ag-slide-hidden' : !ctrl.showProducts}">
+                <div class="ag-slide ag-slide-tn" ng-class="{'ag-slide-hidden' : !ctrl.showProducts}">
                     <p class="text-muted">Clique nas etiquetas para marcar o produto/serviço</p>
                     <ul class="ag-horizontal-list">
                         <li><span class="label label-default">Produto 1</span></li>
@@ -104,10 +104,10 @@
 
                 <h3>Endereço</h3>
 
-                <p data-ng-show="!ctrl.showAddress"><a href="" data-ng-click="ctrl.showAddress = true">Adicionar endereço desta empresa</a></p>
-                <p data-ng-show="ctrl.showAddress"><a href="" data-ng-click="ctrl.showAddress = false">Esconder campos</a></p>
+                <p ng-show="!ctrl.showAddress"><a href="" ng-click="ctrl.showAddress = true">Adicionar endereço desta empresa</a></p>
+                <p ng-show="ctrl.showAddress"><a href="" ng-click="ctrl.showAddress = false">Esconder campos</a></p>
 
-                <div class="ag-slide ag-slide-md" data-ng-class="{'ag-slide-hidden' : !ctrl.showAddress}">
+                <div class="ag-slide ag-slide-md" ng-class="{'ag-slide-hidden' : !ctrl.showAddress}">
                     <fieldset class="form-horizontal">
                         <div class="form-group">
                             <label for="cep" class="col-sm-3 control-label">CEP</label>
@@ -182,10 +182,10 @@
 
                 <h3>Informações para contato</h3>
 
-                <p data-ng-show="!ctrl.showContactInfo"><a href="" data-ng-click="ctrl.showContactInfo = true">Adicionar informações para contato desta empresa</a></p>
-                <p data-ng-show="ctrl.showContactInfo"><a href="" data-ng-click="ctrl.showContactInfo = false">Esconder campos</a></p>
+                <p ng-show="!ctrl.showContactInfo"><a href="" ng-click="ctrl.showContactInfo = true">Adicionar informações para contato desta empresa</a></p>
+                <p ng-show="ctrl.showContactInfo"><a href="" ng-click="ctrl.showContactInfo = false">Esconder campos</a></p>
 
-                <div class="ag-slide" data-ng-class="{'ag-slide-hidden' : !ctrl.showContactInfo}">
+                <div class="ag-slide" ng-class="{'ag-slide-hidden' : !ctrl.showContactInfo}">
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label for="email" class="col-sm-3 control-label">E-mail</label>
@@ -224,10 +224,10 @@
 
                 <h3>Redes sociais</h3>
 
-                <p data-ng-show="!ctrl.showSocialNetworks"><a href="" data-ng-click="ctrl.showSocialNetworks = true">Adicionar redes sociais desta empresa</a></p>
-                <p data-ng-show="ctrl.showSocialNetworks"><a href="" data-ng-click="ctrl.showSocialNetworks = false">Esconder campos</a></p>
+                <p ng-show="!ctrl.showSocialNetworks"><a href="" ng-click="ctrl.showSocialNetworks = true">Adicionar redes sociais desta empresa</a></p>
+                <p ng-show="ctrl.showSocialNetworks"><a href="" ng-click="ctrl.showSocialNetworks = false">Esconder campos</a></p>
 
-                <div class="ag-slide" data-ng-class="{'ag-slide-hidden' : !ctrl.showSocialNetworks}">
+                <div class="ag-slide" ng-class="{'ag-slide-hidden' : !ctrl.showSocialNetworks}">
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label for="facebook" class="col-sm-3 control-label">Facebook</label>
@@ -271,10 +271,10 @@
 
                 <h3>Pessoas dessa empresa</h3>
 
-                <p data-ng-show="!ctrl.showPeople"><a href="" data-ng-click="ctrl.showPeople = true">alterar pessoas desta empresa</a></p>
-                <p data-ng-show="ctrl.showPeople"><a href="" data-ng-click="ctrl.showPeople = false">Esconder campos</a></p>
+                <p ng-show="!ctrl.showPeople"><a href="" ng-click="ctrl.showPeople = true">alterar pessoas desta empresa</a></p>
+                <p ng-show="ctrl.showPeople"><a href="" ng-click="ctrl.showPeople = false">Esconder campos</a></p>
 
-                <div class="ag-slide ag-slide-tn" data-ng-class="{'ag-slide-hidden' : !ctrl.showPeople}">
+                <div class="ag-slide ag-slide-tn" ng-class="{'ag-slide-hidden' : !ctrl.showPeople}">
                     <p class="text-muted">to be implemented</p>
                 </div>
 
@@ -282,10 +282,10 @@
 
                 <h3>Outras informações</h3>
 
-                <p data-ng-show="!ctrl.showOtherInfo"><a href="" data-ng-click="ctrl.showOtherInfo = true">Adicionar outras informações desta empresa</a></p>
-                <p data-ng-show="ctrl.showOtherInfo"><a href="" data-ng-click="ctrl.showOtherInfo = false">Esconder campos</a></p>
+                <p ng-show="!ctrl.showOtherInfo"><a href="" ng-click="ctrl.showOtherInfo = true">Adicionar outras informações desta empresa</a></p>
+                <p ng-show="ctrl.showOtherInfo"><a href="" ng-click="ctrl.showOtherInfo = false">Esconder campos</a></p>
 
-                <div class="ag-slide ag-slide-sm" data-ng-class="{'ag-slide-hidden' : !ctrl.showOtherInfo}">
+                <div class="ag-slide ag-slide-sm" ng-class="{'ag-slide-hidden' : !ctrl.showOtherInfo}">
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label for="setor" class="col-sm-3 control-label">Setor</label>
@@ -324,7 +324,7 @@
         <div class="col-xs-12 col-sm-4" ng-hide="ctrl.newOrganization">
             <hr class="hidden-md hidden-lg">
             <p>
-                <button class="btn btn-danger btn-block" data-ng-click="ctrl.deleteAction()"><span class="glyphicon glyphicon-remove"></span> Excluir empresa</button>
+                <button class="btn btn-danger btn-block" ng-click="ctrl.deleteAction()"><span class="glyphicon glyphicon-remove"></span> Excluir empresa</button>
             </p>
         </div>
     </div>

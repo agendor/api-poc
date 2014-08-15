@@ -14,47 +14,37 @@ angular.module( 'angularApp' ).controller( 'MainCtrl', [
 
         ctrl.searchTerm = '';
         ctrl.orderIndex = 2;
-        ctrl.filtered = [];
-        ctrl.isFiltered = false;
-        ctrl.qtyFiltered = 0;
-        ctrl.qtyTotal = organizations.length;
+        ctrl.orderPredicate = 'nickname';
+        ctrl.orderReverse = false;
 
-        ctrl.updateFilter = function ( term )
+        ctrl.organizations = organizations;
+        $scope.filtered = ctrl.organizations;
+
+        ctrl.updateFilter = function ()
         {
-            var _orderPredicate = 'nickname';
-            var _orderReverse = false;
-
             switch ( +ctrl.orderIndex )
             {
                 case 0:
-                    _orderPredicate = 'ranking';
-                    _orderReverse = true;
+                    ctrl.orderPredicate = 'ranking';
+                    ctrl.orderReverse = true;
                     break;
                 case 1:
-                    _orderPredicate = 'ranking';
-                    _orderReverse = false;
+                    ctrl.orderPredicate = 'ranking';
+                    ctrl.orderReverse = false;
                     break;
                 case 2:
-                    _orderPredicate = 'nickname';
-                    _orderReverse = false;
+                    ctrl.orderPredicate = 'nickname';
+                    ctrl.orderReverse = false;
                     break;
                 case 3:
-                    _orderPredicate = 'createTime';
-                    _orderReverse = true;
+                    ctrl.orderPredicate = 'createTime';
+                    ctrl.orderReverse = true;
                     break;
                 case 4:
-                    _orderPredicate = 'createTime';
-                    _orderReverse = false;
+                    ctrl.orderPredicate = 'createTime';
+                    ctrl.orderReverse = false;
                     break;
             }
-
-            ctrl.filtered = $filter( 'filter' )( organizations, term );
-            ctrl.filtered = $filter( 'orderBy' )( ctrl.filtered, _orderPredicate, _orderReverse );
-
-            ctrl.qtyFiltered = ctrl.filtered.length;
-            ctrl.isFiltered = !!term.length;
         };
-
-        ctrl.updateFilter( '' );
     }
 ] );
