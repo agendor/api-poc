@@ -2,6 +2,72 @@
 'use strict';
 
 /**
+ * removes empty attributes
+ * @param {object} obj
+ * @param {number} [level]
+ * @returns {object}
+ * @private
+ */
+var _stripEmptyAttributes = function _stripEmptyAttributes ( obj, level )
+{
+    level = level || 0;
+
+    if ( level > 3 )
+    {
+        return obj;
+    }
+
+    /**
+     * checks if an object has no properties
+     * @param {object} obj
+     * @returns {boolean}
+     * @private
+     */
+    var _isEmptyObject = function ( obj )
+    {
+        for ( var attribute in obj )
+        {
+            if ( obj.hasOwnProperty( attribute ) )
+            {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    for ( var attribute in obj )
+    {
+        if ( obj.hasOwnProperty( attribute ) )
+        {
+            if ( angular.isObject( obj[attribute] ) )
+            {
+                obj[attribute] = _stripEmptyAttributes( obj[attribute], level + 1 );
+
+                if ( _isEmptyObject( obj[attribute] ) )
+                {
+                    delete obj[attribute];
+                }
+
+                continue;
+            }
+
+            if ( angular.isArray( obj[attribute] ) && !obj[attribute].length )
+            {
+                delete obj[attribute];
+                continue;
+            }
+
+            if ( !obj[attribute] )
+            {
+                delete obj[attribute];
+            }
+        }
+    }
+
+    return obj;
+};
+
+/**
  * @ngdoc service
  * @name angularApp.OrganizationService
  * @description
@@ -9,10 +75,8 @@
  * Service in the angularApp.
  */
 angular.module( 'angularApp' ).service( 'OrganizationService', [
-    '$q', '$http', 'DSCacheFactory', function ( $q, $http, DSCacheFactory )
+    '$q', '$http', 'DSCacheFactory', 'BASE_URL', function ( $q, $http, DSCacheFactory, BASE_URL )
     {
-        var BASE_URL = 'http://localhost:8000/organizations';
-
         var dataCache = DSCacheFactory( 'organizationCache', {
             'maxAge'             : 90000,         // Items added to this cache expire after 15 minutes.
             'cacheFlushInterval' : 600000,        // This cache will clear itself every hour.
@@ -27,74 +91,8 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
          */
         var _toURL = function ( id )
         {
-            return BASE_URL + ( id ? '/' + id : '' );
+            return BASE_URL + '/organizations' + ( id ? '/' + id : '?per_page=25' );
 
-        };
-
-        /**
-         * checks if an object has no properties
-         * @param {object} obj
-         * @returns {boolean}
-         * @private
-         */
-        var _isEmptyObject = function _isEmptyObject ( obj )
-        {
-            for ( var attribute in obj )
-            {
-                if ( obj.hasOwnProperty( attribute ) )
-                {
-                    return false;
-                }
-            }
-            return true;
-        };
-
-        /**
-         * removes empty attributes
-         * @param {object} obj
-         * @param {number} [level]
-         * @returns {object}
-         * @private
-         */
-        var _stripEmptyAttributes = function _stripEmptyAttributes ( obj, level )
-        {
-            level = level || 0;
-
-            if ( level > 3 )
-            {
-                return obj;
-            }
-
-            for ( var attribute in obj )
-            {
-                if ( obj.hasOwnProperty( attribute ) )
-                {
-                    if ( angular.isObject( obj[attribute] ) )
-                    {
-                        obj[attribute] = _stripEmptyAttributes( obj[attribute], level + 1 );
-
-                        if ( _isEmptyObject( obj[attribute] ) )
-                        {
-                            delete obj[attribute];
-                        }
-
-                        continue;
-                    }
-
-                    if ( angular.isArray( obj[attribute] ) && !obj[attribute].length )
-                    {
-                        delete obj[attribute];
-                        continue;
-                    }
-
-                    if ( !obj[attribute] )
-                    {
-                        delete obj[attribute];
-                    }
-                }
-            }
-
-            return obj;
         };
 
         /**
@@ -151,6 +149,94 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
         };
 
         /**
+         * serializes data berfore sending server
+         * @param {object} organization
+         * @returns {object}
+         * @private
+         */
+        var _serialize = function ( organization )
+        {
+            var _phone;
+
+            if ( organization.phoneNumber )
+            {
+                if ( organization.phones && organization.phones.length )
+                {
+                    _phone = organization.phones.filter( function ( item )
+                    {
+                        return item.type === 'work';
+                    } )[0] || undefined;
+
+                    if ( _phone )
+                    {
+                        _phone.number = organization.phoneNumber;
+                    }
+                    else
+                    {
+                        organization.phones.push( {'type' : 'work', 'number' : organization.phoneNumber} );
+                    }
+                }
+                else
+                {
+                    organization.phones = [
+                        {'type' : 'work', 'number' : organization.phoneNumber}
+                    ];
+                }
+            }
+            delete organization.phoneNumber;
+
+            delete organization.avatar;
+            delete organization.createTime;
+            delete organization.user;
+            delete organization.customer;
+            delete organization.userOwner;
+
+            return _stripEmptyAttributes( organization );
+        };
+
+        /**
+         * serializes data from server
+         * @param {object|string} data
+         * @returns {object}
+         * @private
+         */
+        var _deserialize = function ( data )
+        {
+            var organization = angular.extend( _stub(), data );
+            var _phone;
+
+            if ( organization.category && organization.category.categoryId )
+            {
+                organization.category = organization.category.categoryId;
+            }
+            else
+            {
+                organization.category = undefined;
+            }
+
+            organization.avatar = 'http://lorempixel.com/150/150/people/' + ( (+organization.organizationId % 10) + 1 );
+
+            if ( organization.phones && organization.phones.length )
+            {
+                _phone = organization.phones.filter( function ( item )
+                {
+                    return item.type === 'work';
+                } )[0] || undefined;
+
+                if ( _phone )
+                {
+                    organization.phoneNumber = _phone.number;
+                }
+            }
+            else
+            {
+                organization.phoneNumber = undefined;
+            }
+
+            return _stripEmptyAttributes( organization );
+        };
+
+        /**
          * list all organizations
          * @returns {promise|Promise.promise|Q.promise}
          * @private
@@ -159,10 +245,12 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
         {
             var deferred = $q.defer();
 
-            $http.get( _toURL(), { 'cache'   : dataCache } ).then(function ( response )
+            $http.get( _toURL(), { 'cache' : dataCache } ).then(function ( response )
             {
                 var organizations = response.data.map( function ( organization )
                 {
+                    organization = _deserialize( organization );
+
                     dataCache.put( _toURL( organization.organizationId ), organization );
 
                     return {
@@ -170,10 +258,9 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
                         'nickname'       : organization.nickname,
                         'ranking'        : organization.ranking,
                         'createTime'     : organization.createTime,
-                        'category'       : 31, // TODO: get from API
-                        'phoneNumber'    : organization.phones && organization.phones.length &&
-                        organization.phones[0].number,
-                        'avatar'         : 'http://lorempixel.com/150/150/nature/' + ((+organization.organizationId % 10) + 1)
+                        'category'       : organization.category,
+                        'phoneNumber'    : organization.phoneNumber,
+                        'avatar'         : organization.avatar
                     };
 
                 } );
@@ -196,23 +283,19 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
 
             var organization = dataCache.get( _toURL( id ) );
 
-            if ( organization && organization.nickname ) {
+            if ( organization && organization.nickname )
+            {
                 deferred.resolve( organization );
                 return deferred.promise;
             }
 
-            $http.get( _toURL( id ), { 'cache'   : dataCache } ).then(function ( response )
+            $http.get( _toURL( id ), { 'cache' : dataCache } ).then(function ( response )
             {
-                var organization = response.data;
+                var organization = _deserialize( response.data );
 
-                organization.category = 31; // TODO: get from API
-                organization.phoneNumber =
-                organization.phones && organization.phones.length && organization.phones[0].number;
-                organization.avatar = 'http://lorempixel.com/150/150/nature/' + ((+organization.organizationId % 10) + 1);
+                dataCache.put( _toURL( id ), organization );
 
-                delete organization.phones;
-
-                return deferred.resolve( angular.copy( organization ) );
+                return deferred.resolve( organization );
             } ).catch( deferred.reject );
 
             return deferred.promise;
@@ -231,7 +314,7 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
 
             $http.put( _toURL( id ), { 'ranking' : raking } ).then(function ( response )
             {
-                var organization = response.data;
+                var organization = _deserialize( response.data );
 
                 dataCache.put( _toURL( id ), organization );
                 dataCache.remove( _toURL() );
@@ -273,19 +356,9 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
         {
             var deferred = $q.defer();
 
-            // custom code for PoC
-            organization = _stripEmptyAttributes( angular.copy( organization ) );
-            if ( organization.phoneNumber )
+            $http.post( _toURL(), _serialize( organization ) ).then(function ( response )
             {
-                organization.phones = [
-                    {'type' : 'mobile', 'number' : organization.phoneNumber}
-                ];
-            }
-            delete organization.phoneNumber;
-
-            $http.post( _toURL(), organization ).then(function ( response )
-            {
-                var organization = response.data;
+                var organization = _deserialize( response.data );
 
                 dataCache.put( _toURL( organization.organizationId ), organization );
                 dataCache.remove( _toURL() );
@@ -307,39 +380,11 @@ angular.module( 'angularApp' ).service( 'OrganizationService', [
         {
             var deferred = $q.defer();
 
-            // custom code for PoC
-            organization = _stripEmptyAttributes( angular.copy( organization ) );
-
-            delete organization.avatar;
-            delete organization.createTime;
-            delete organization.user;
-            delete organization.customer;
-
-            if ( organization.phoneNumber )
+            $http.put( _toURL( id ), _serialize( organization ) ).then(function ( response )
             {
-                if ( organization.phones && organization.phones.length )
-                {
-                    organization.phones[0].number = organization.phoneNumber;
-                }
-                else
-                {
-                    organization.phones = [
-                        {'type' : 'mobile', 'number' : organization.phoneNumber}
-                    ];
-                }
-            }
-            delete organization.phoneNumber;
+                var organization = _deserialize( response.data );
 
-            if ( organization.userOwner )
-            {
-                organization.userOwner = organization.userOwner.userId || 0;
-            }
-
-            $http.put( _toURL( id ), organization ).then(function ( response )
-            {
-                var organization = response.data;
-
-                dataCache.put( _toURL( organization.organizationId ), organization );
+                dataCache.put( _toURL( id ), organization );
                 dataCache.remove( _toURL() );
 
                 return deferred.resolve( organization );

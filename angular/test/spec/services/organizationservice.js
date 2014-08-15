@@ -7,7 +7,7 @@ describe( 'Service: OrganizationService', function ()
 
     // constants from service
     var BASE_URL = 'http://localhost:8000/organizations';
-//    var AUTH_TOKEN = 'Basic dEB0LmNvbToxMjM=';
+    //    var AUTH_TOKEN = 'Basic dEB0LmNvbToxMjM=';
 
     beforeEach( module( 'angularApp' ) );
 
@@ -102,17 +102,17 @@ describe( 'Service: OrganizationService', function ()
 
     it( 'should list all organizations', function ( done )
     {
-        $httpBackend.whenGET( BASE_URL ).respond( [
+        $httpBackend.whenGET( BASE_URL + '?per_page=25' ).respond( [
             {
                 organizationId : 1,
                 nickname       : 'test',
                 ranking        : 5,
                 createTime     : '2014-08-07T11:39:00',
-                category       : 31,
+                category       : { categoryId : 31, name : 'Cliente efetivo' },
                 phones         : [
-                    {number : '(11) 1234-0000'}
+                    {type : 'work', number : '(11) 1234-0000'}
                 ],
-                avatar         : 'http://lorempixel.com/150/150/nature/2'
+                avatar         : 'http://lorempixel.com/150/150/people/2'
             }
         ] );
 
@@ -132,7 +132,7 @@ describe( 'Service: OrganizationService', function ()
                 createTime     : '2014-08-07T11:39:00',
                 category       : 31,
                 phoneNumber    : '(11) 1234-0000',
-                avatar         : 'http://lorempixel.com/150/150/nature/2'
+                avatar         : 'http://lorempixel.com/150/150/people/2'
             } );
 
             done();
@@ -152,11 +152,11 @@ describe( 'Service: OrganizationService', function ()
             nickname       : 'test',
             ranking        : 5,
             createTime     : '2014-08-07T11:39:00',
-            category       : 31,
+            category       : { categoryId : 31, name : 'Cliente efetivo' },
             phones         : [
-                {number : '(11) 1234-0000'}
+                {type : 'work', number : '(11) 1234-0000'}
             ],
-            avatar         : 'http://lorempixel.com/150/150/nature/2'
+            avatar         : 'http://lorempixel.com/150/150/people/2'
         } );
 
         OrganizationService.get( 1 ).then(function ( organization )
@@ -170,7 +170,10 @@ describe( 'Service: OrganizationService', function ()
                 createTime     : '2014-08-07T11:39:00',
                 category       : 31,
                 phoneNumber    : '(11) 1234-0000',
-                avatar         : 'http://lorempixel.com/150/150/nature/2'
+                phones         : [
+                    {type : 'work', number : '(11) 1234-0000'}
+                ],
+                avatar         : 'http://lorempixel.com/150/150/people/2'
             } );
 
             done();
@@ -190,11 +193,11 @@ describe( 'Service: OrganizationService', function ()
             nickname       : 'test',
             ranking        : 5,
             createTime     : '2014-08-07T11:39:00',
-            category       : 31,
+            category       : { categoryId : 31, name : 'Cliente efetivo' },
             phones         : [
-                {number : '(11) 1234-0000'}
+                {type : 'work', number : '(11) 1234-0000'}
             ],
-            avatar         : 'http://lorempixel.com/150/150/nature/2'
+            avatar         : 'http://lorempixel.com/150/150/people/2'
         } );
 
         OrganizationService.updateRanking( 1, 5 ).then(function ( organization )
@@ -230,12 +233,16 @@ describe( 'Service: OrganizationService', function ()
 
     it( 'should insert a new organization', function ( done )
     {
-        $httpBackend.whenPOST( BASE_URL ).respond( function ( method, url, data )
+        $httpBackend.whenPOST( BASE_URL + '?per_page=25' ).respond( function ( method, url, data )
         {
             data = JSON.parse( data );
 
             data.organizationId = 2;
             data.createTime = '2014-08-07T14:25:00';
+            data.category = { categoryId : 31, name : 'Cliente efetivo' };
+            data.phones = [
+                {type : 'work', number : '(11) 1234-0000'}
+            ];
 
             return [200, data, {}];
         } );
@@ -277,6 +284,9 @@ describe( 'Service: OrganizationService', function ()
 
         OrganizationService.save( _organization ).then(function ( organization )
         {
+            // serializer adds this field
+            _organization.avatar = 'http://lorempixel.com/150/150/people/2';
+
             expect( organization ).toEqual( _organization );
 
             done();

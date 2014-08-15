@@ -12,8 +12,11 @@
  */
 angular.module( 'angularApp', [
     'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'angular-data.DSCacheFactory'
-] ).config( [
-    '$routeProvider', '$httpProvider', function ( $routeProvider, $httpProvider )
+] )
+.constant('BASE_URL', 'http://localhost:8000')
+.constant('AUTH_TOKEN', 'Basic dEB0LmNvbToxMjM=')
+.config( [
+    '$routeProvider', '$httpProvider', 'AUTH_TOKEN', function ( $routeProvider, $httpProvider, AUTH_TOKEN )
     {
         $routeProvider.when( '/', {
             templateUrl  : 'views/main.html',
@@ -58,7 +61,7 @@ angular.module( 'angularApp', [
 
         angular.extend( $httpProvider.defaults, {
             'headers' : {
-                'common' : { 'Authorization' : 'Basic dEB0LmNvbToxMjM=' },
+                'common' : { 'Authorization' : AUTH_TOKEN },
                 'post'   : { 'Content-Type' : 'application/json; charset=utf-8' },
                 'put'    : { 'Content-Type' : 'application/json; charset=utf-8' },
                 'delete' : { 'Content-Type' : 'application/json; charset=utf-8' }
