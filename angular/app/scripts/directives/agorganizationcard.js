@@ -38,7 +38,7 @@ angular.module( 'angularApp' ).directive( 'agOrganizationCard', function ()
                     ctrl.ranking = newRanking;
                     ctrl.organization.ranking = ctrl.ranking;
                     OrganizationService.updateRanking( ctrl.organization.organizationId, newRanking );
-                    return true
+                    return true;
                 }
 
                 return false;

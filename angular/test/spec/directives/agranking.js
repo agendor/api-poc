@@ -6,7 +6,7 @@ describe( 'Directive: agRating', function ()
 {
     var $elem, scope, html;
 
-    html = '<ag-rating value="ranking"></ag-rating>';
+    html = '<ag-ranking ranking="ranking"></ag-ranking>';
 
     // load the directive's module
     beforeEach( module( 'angularApp' ) );

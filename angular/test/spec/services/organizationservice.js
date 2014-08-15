@@ -26,7 +26,7 @@ describe( 'Service: OrganizationService', function ()
                 remove : function ()
                 {
                 }
-            }
+            };
         } );
     } ) );
 

@@ -36,7 +36,7 @@ describe( 'Directive: agOrganizationCard', function ()
                 remove : function ()
                 {
                 }
-            }
+            };
         } );
     } ) );
 
