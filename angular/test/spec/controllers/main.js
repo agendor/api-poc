@@ -38,7 +38,6 @@ describe( 'Controller: MainCtrl', function ()
         expect( ctrl.organizations ).toEqual( organizationsMock );
         expect( ctrl.orderPredicate ).toBe( 'nickname' );
         expect( ctrl.orderReverse ).toBe( false );
-        expect( scope.filtered ).toBe( organizationsMock );
     } );
 
     // depends on testing the compiled view

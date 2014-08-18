@@ -72,11 +72,11 @@
             </div>
 
             <ul class="list-group">
+                <li class="list-group-item" ng-repeat="organization in ctrl.organizations | filter:ctrl.searchTerm | orderBy:ctrl.orderPredicate:ctrl.orderReverse as filtered track by organization.organizationId">
+                    <ag-organization-card organization="::organization"></ag-organization-card>
+                </li>
                 <li class="list-group-item" ng-hide="filtered.length">
                     Nenhuma empresa encontrada
-                </li>
-                <li class="list-group-item" ng-repeat="organization in filtered = ( ctrl.organizations | filter:ctrl.searchTerm | orderBy:ctrl.orderPredicate:ctrl.orderReverse ) track by organization.organizationId">
-                    <ag-organization-card organization="::organization"></ag-organization-card>
                 </li>
             </ul>
         </div>

@@ -18,7 +18,6 @@ angular.module( 'angularApp' ).controller( 'MainCtrl', [
         ctrl.orderReverse = false;
 
         ctrl.organizations = organizations;
-        $scope.filtered = ctrl.organizations;
 
         ctrl.updateFilter = function ()
         {
