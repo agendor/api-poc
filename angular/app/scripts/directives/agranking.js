@@ -9,7 +9,7 @@
 angular.module( 'angularApp' ).directive( 'agRanking', function ()
 {
     return {
-        'template'     : '<ul class="ag-stars"><li class="ag-star" ng-repeat="star in ctrl.stars track by $index" ng-class="{ \'ag-star-active\' : star<=ctrl.current, \'ag-star-selected\' : star==ranking }" ng-click="ctrl.action(star)"></li></ul>',
+        'templateUrl'     : 'templates/agRanking.html',
         'replace'      : true,
         'restrict'     : 'EAC',
         'scope'        : {

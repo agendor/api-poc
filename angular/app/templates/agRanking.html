@@ -1,0 +1,6 @@
+<ul class="ag-stars">
+  <li class="ag-star"   ng-repeat="star in ctrl.stars track by $index"
+  ng-class="{ 'ag-star-active' : star<=ctrl.current, 'ag-star-selected' : star==ranking }"
+  ng-click="ctrl.action(star)">
+  </li>
+</ul>

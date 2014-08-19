@@ -9,7 +9,7 @@
 angular.module( 'angularApp' ).directive( 'agOrganizationCard', function ()
 {
     return {
-        'template'     : '<div class="ag-card">\n    <div class="row">\n        <div class="col-xs-3">\n            <img class="img-responsive img-thumbnail" src="" ng-src="{{::ctrl.organization.avatar}}">\n        </div>\n        <div class="col-xs-9">\n            <h3>{{::ctrl.organization.nickname}}</h3>\n            <p><strong>Categoria:</strong> {{::ctrl.category || \'Não informada\'}}</p>\n            <p><strong>Telefone:</strong> {{::ctrl.organization.phoneNumber || \'Não informado\'}}</p>\n        </div>\n    </div>\n    <div class="ag-card-info">\n        <ag-ranking ranking="ctrl.ranking" ng-click="ctrl.updateRanking(ctrl.ranking)"></ag-ranking>\n    </div>\n    <ul class="ag-card-options">\n        <li><a ng-href="./#/edit/{{::ctrl.organization.organizationId}}">Editar</a></li>\n    </ul>\n</div>',
+        'templateUrl'     : 'templates/agOrganizationCard.html',
         'restrict'     : 'EAC',
         'scope'        : {
             'organization' : '='

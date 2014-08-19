@@ -1,0 +1,18 @@
+<div class="ag-card">
+  <div class="row">
+    <div class="col-xs-3">
+      <img class="img-responsive img-thumbnail" src="" ng-src="{{::ctrl.organization.avatar}}">
+    </div>
+    <div class="col-xs-9">
+      <h3>{{::ctrl.organization.nickname}}</h3>
+      <p><strong>Categoria:</strong> {{::ctrl.category || 'Não informada'}}</p>
+      <p><strong>Telefone:</strong> {{::ctrl.organization.phoneNumber || 'Não informado'}}</p>
+    </div>
+  </div>
+  <div class="ag-card-info">
+    <ag-ranking ranking="ctrl.ranking" ng-click="ctrl.updateRanking(ctrl.ranking)"></ag-ranking>
+  </div>
+  <ul class="ag-card-options">
+    <li><a ng-href="./#/edit/{{::ctrl.organization.organizationId}}">Editar</a></li>
+  </ul>
+</div>
